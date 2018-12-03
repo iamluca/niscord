@@ -16,5 +16,9 @@
   "bugs": {
     "url": "https://github.com/boltxyz/nodecord/issues"
   },
-  "homepage": "https://github.com/boltxyz/nodecord#readme"
+  "homepage": "https://github.com/boltxyz/nodecord#readme",
+  "devDependencies": {
+    "eslint": "^5.9.0",
+    "jsdoc": "^3.5.5"
+  }
 }
