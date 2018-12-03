@@ -1,0 +1,20 @@
+{
+  "name": "nodecord",
+  "version": "1.0.0",
+  "description": "Nodecord",
+  "main": "./src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "docs": "jsdoc -c .jsdoc.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/boltxyz/nodecord.git"
+  },
+  "author": "boltxyz",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/boltxyz/nodecord/issues"
+  },
+  "homepage": "https://github.com/boltxyz/nodecord#readme"
+}
