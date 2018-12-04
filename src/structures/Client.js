@@ -2,7 +2,6 @@
 
 const Collection = require('../util/Collection');
 const Constants = require('../util/Constants');
-const EventEmitter = require('events').EventEmitter;
 const Request = require('../rest/Request');
 const WebSocketConnection = require('../websocket/WebsocketConnection');
 
@@ -10,7 +9,7 @@ const WebSocketConnection = require('../websocket/WebsocketConnection');
  * @class
  * @extends {EventEmitter}
  */
-class Client extends WebScoketConnection {
+class Client extends WebSocketConnection {
 
     /**
      * @constructor
