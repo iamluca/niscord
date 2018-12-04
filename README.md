@@ -9,7 +9,7 @@
 </div>
 
 ## About
-Niscord is a JavaScript - [Node.js](https://nodejs.org) library for Discord API.
+Niscord is a powerful, easy-to-use JavaScript library for Discord API.
  * Powerful
  * Object-oriented
  * Easy-to-use
