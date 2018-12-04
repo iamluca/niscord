@@ -3,13 +3,14 @@
 const Collection = require('../util/Collection');
 const Constants = require('../util/Constants');
 const EventEmitter = require('events').EventEmitter;
-const Rest = null;
+const Request = require('../rest/Request');
+const WebSocketConnection = require('../websocket/WebsocketConnection');
 
 /**
  * @class
  * @extends {EventEmitter}
  */
-class Client extends EventEmitter {
+class Client extends WebScoketConnection {
 
     /**
      * @constructor
@@ -33,7 +34,7 @@ class Client extends EventEmitter {
         /**
          * @type {}
          */
-        this.rest = new Rest(this);
+        this.rest = new Request(this);
 
         /**
          * Collection of users, this client is currently handling.

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>structures/Client.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav>
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.com/niscord/niscord" target="_blank" >GitHub</a></h2><h2><a href="https://npmjs.com/package/niscord" target="_blank" >NPM</a></h2><h3>Classes</h3><ul><li><a href="Client.html">Client</a><ul class='methods'><li data-type='method'><a href="Client.html#start">start</a></li></ul></li><li><a href="Collection.html">Collection</a><ul class='methods'><li data-type='method'><a href="Collection.html#array">array</a></li><li data-type='method'><a href="Collection.html#clone">clone</a></li><li data-type='method'><a href="Collection.html#concat">concat</a></li><li data-type='method'><a href="Collection.html#each">each</a></li><li data-type='method'><a href="Collection.html#equals">equals</a></li><li data-type='method'><a href="Collection.html#every">every</a></li><li data-type='method'><a href="Collection.html#filter">filter</a></li><li data-type='method'><a href="Collection.html#find">find</a></li><li data-type='method'><a href="Collection.html#findKey">findKey</a></li><li data-type='method'><a href="Collection.html#first">first</a></li><li data-type='method'><a href="Collection.html#firstKey">firstKey</a></li><li data-type='method'><a href="Collection.html#keyArray">keyArray</a></li><li data-type='method'><a href="Collection.html#last">last</a></li><li data-type='method'><a href="Collection.html#lastKey">lastKey</a></li><li data-type='method'><a href="Collection.html#map">map</a></li><li data-type='method'><a href="Collection.html#partition">partition</a></li><li data-type='method'><a href="Collection.html#random">random</a></li><li data-type='method'><a href="Collection.html#randomKey">randomKey</a></li><li data-type='method'><a href="Collection.html#reduce">reduce</a></li><li data-type='method'><a href="Collection.html#some">some</a></li><li data-type='method'><a href="Collection.html#sort">sort</a></li><li data-type='method'><a href="Collection.html#sweep">sweep</a></li><li data-type='method'><a href="Collection.html#tap">tap</a></li></ul></li><li><a href="Database.html">Database</a></li></ul>
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">structures/Client.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>'use strict';
+
+const Collection = require('../util/Collection');
+const Constants = require('../util/Constants');
+const EventEmitter = require('events').EventEmitter;
+const Request = require('../rest/Request');
+const WebSocketConnection = require('../websocket/WebsocketConnection');
+
+/**
+ * @class
+ * @extends {EventEmitter}
+ */
+class Client extends WebScoketConnection {
+
+    /**
+     * @constructor
+     * @param {ClientOptions} [options] Options for the client
+     */
+    constructor(options = {}) {
+        super();
+
+        /**
+         * Options for the client
+         * @type {ClientOptions}
+         */
+        this.options = options;
+
+        /**
+         * Discord client token
+         * @type {?string}
+         */
+        this.token = null;
+
+        /**
+         * @type {}
+         */
+        this.rest = new Request(this);
+
+        /**
+         * Collection of users, this client is currently handling.
+         * @type {Collection}
+         */
+        this.users = new Collection();
+
+        /**
+         * Collection of guilds, this client is currently handling.
+         * @type {Collection}
+         */
+        this.guilds = new Collection();
+
+        /**
+         * Collection of channels, this client is currently handling.
+         * @type {Collection}
+         */
+        this.channels = new Collection();
+    }
+
+    /**
+     * 
+     * @param {string} token Discord client token
+     */
+    start(token = this.token) {
+        if (!token || typeof token !== 'string') throw new Error(Constants.Errors.INVALID_TOKEN);
+        this.token = token;
+    }
+
+    /**
+     * @param {string} script
+     * @private
+     */
+    _eval(script) {
+        return eval(script);
+    }
+}
+
+module.exports = Client;</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Dec 04 2018 17:44:12 GMT+0400 (Gulf Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/jquery-3.1.1.min.js"></script>
+
+<script src="scripts/search.js"></script>
+
+
+
+
+</body>
+</html>

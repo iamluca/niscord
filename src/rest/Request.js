@@ -10,6 +10,13 @@ if (https.Agent) var agent = new https.Agent({
 class Request {
     constructor(client) {
         this.client = client;
+        this.tokenPrefix = 'Bot';
+    }
+
+    getAuth() {
+        const token = this.client.token;
+        if (token) return `${this.tokenPrefix} ${token}`;
+        else return token;
     }
 
     async request(method, url, options = {}) {
@@ -21,7 +28,7 @@ class Request {
         var headers = {};
         var body;
         if (!methods.includes(this.method)) throw new Error('Invalid method.');
-        if (this.options.auth !== false) headers.Authorization = this.rest.getAuth();
+        if (this.options.auth !== false) headers.Authorization = this.getAuth();
         if (this.options.reason) headers['User-Agent'] = Constants.UserAgent;
         if (this.options.data != null) {
             body = JSON.stringify(this.data);
