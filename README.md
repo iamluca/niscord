@@ -1,5 +1,5 @@
 # Nodecord
-<div>
+<div align="center">
   <p>
     <a href="https://discord.gg/XrRhXNT"><img src="https://discordapp.com/api/guilds/469539054371864606/embed.png" alt="Discord" /></a>
   </p>
