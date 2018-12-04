@@ -1,3 +1,5 @@
+'use strict';
+
 const Collection = require('../util/Collection');
 const Constants = require('../util/Constants');
 const EventEmitter = require('events').EventEmitter;

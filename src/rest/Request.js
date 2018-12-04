@@ -1,19 +1,39 @@
+'use strict';
+
 const Constants = require('../util/Constants');
 const fetch = require('node-fetch');
+const https = require('https');
+if (https.Agent) var agent = new https.Agent({
+    keepAlive: true
+});
 
 class Request {
-    constructor(rest, method, url, auth, data) {
-        this.rest = rest;
-        this.method = method;
-        this.url = url;
-        this.auth = auth;
-        this.data = data;
+    constructor(client) {
+        this.client = client;
     }
 
-    request() {
+    async request(method, url, options = {}) {
+        this.method = method;
+        this.url = url;
+        this.options = options;
         const methods = ['get', 'post', 'delete', 'patch', 'put'];
-        const url = Constants.Http.API + Constants.Http.VERSION;
+        const requestUrl = Constants.Http.API + Constants.Http.VERSION;
+        var headers = {};
+        var body;
         if (!methods.includes(this.method)) throw new Error('Invalid method.');
+        if (this.options.auth !== false) headers.Authorization = this.rest.getAuth();
+        if (this.options.reason) headers['User-Agent'] = Constants.UserAgent;
+        if (this.options.data != null) {
+            body = JSON.stringify(this.data);
+            headers['Content-Type'] = 'application/json';
+        }
+
+        return fetch(requestUrl, {
+            method: this.method,
+            headers,
+            agent,
+            body,
+        });
     }
 }
 
