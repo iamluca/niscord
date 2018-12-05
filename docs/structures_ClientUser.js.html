@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>structures/Message.js - Documentation</title>
+    <title>structures/ClientUser.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -33,7 +33,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">structures/Message.js</h1>
+    <h1 class="page-title">structures/ClientUser.js</h1>
     
 
     
@@ -43,77 +43,56 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>const Endpoints = require('../util/Constants').Endpoints;
+            <pre class="prettyprint source linenums"><code>const Constants = require('../util/Constants');
 
-class Message {
-    constructor(client, data, channel) {
-        this.channel = channel;
-        if (data) this._setup(data);
-        Object.defineProperty(this, 'client', { value: client });
-    }
-
-    _setup(data) {
-
-        /**
-         * @type {string}
-         */
-        this.id = data.id;
-
-        /**
-         * @type {string}
-         */
-        this.type = data.type;
-
-        /**
-         * @type {User}
-         */
-        this.author = this.client.users.add(data.author, !data.webhook_id);
-
-        /**
-         * @type {string}
-         */
-        this.content = data.content;
-
-        /**
-         * @type {boolean}
-         */
-        this.tts = data.tts;
-
-        /**
-         * @type {string}
-         */
-        this.nonce = data.nonce;
-    }
-
-    get guild() {
-        return this.channel.guild || null;
-    }
-
-    get member() {
-        return this.guild ? this.guild.members.get(this.author.id) || null : null;
+class ClientUser {
+    constructor(client, data) {
+        this.data = data;
+        Object.defineProperty(this, 'client', {
+            value: client
+        });
+        Object.defineProperty(this, 'since', {
+            value: null,
+            writable: true
+        });
+        Object.defineProperty(this, 'game', {
+            value: null,
+            writable: true
+        });
+        Object.defineProperty(this, 'status', {
+            value: 'online',
+            writable: true
+        });
+        Object.defineProperty(this, 'afk', {
+            value: false,
+            writable: true
+        });
     }
 
     /**
      * 
-     * @param {string} [content=''] 
-     * @param {object} [options]
-     * @returns {Promise&lt;Message>}
+     * @param {Object} [options] Options for the presence
+     * @returns {*}
      */
-    edit(content, options = {}) {
-        if (!options) options = {};
-        return this.client.rest.request('patch', Endpoints.CHANNEL_MESSAGE(this.channel.id, this.id), {
-            auth: true,
-            data: {
-                content: content,
-                embed: options.embed
+    setPresence(options = {}) {
+        const status = ['online', 'idle', 'dnd', 'offline'];
+        if (!status.includes(options.status) &amp;&amp; options.status) return this.client.emit('error', new Error('Unknown status.'));
+        this.since = options.since || null;
+        this.game = options.game || null;
+        this.afk = options.afk || false;
+        this.client.send({
+            op: Constants.WebSocket.OPCODES.STATUS_UPDATE,
+            d: {
+                since: this.since,
+                game: this.game,
+                status: this.status,
+                afk: this.afk
             }
-        }).then(() => {
-            return this;
         });
     }
 }
 
-module.exports = Message;</code></pre>
+module.exports = ClientUser;</code></pre>
         </article>
     </section>
 
