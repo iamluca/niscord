@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>Home - Documentation</title>
+    <title>structures/User.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -33,66 +33,70 @@
 
 <div id="main">
     
+    <h1 class="page-title">structures/User.js</h1>
+    
 
     
 
 
 
     
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>'use strict';
 
+class User {
+    constructor(client, data) {
+        Object.defineProperty(this, 'client', {
+            value: client
+        });
+        if (data) return this._setup(data);
+    }
 
+    _setup(data) {
 
+        /**
+         * The ID of the user
+         * @type {string}
+         */
+        this.id = data.id;
 
+        /**
+         * The username of the user
+         * @type {string}
+         */
+        this.username = data.username;
 
+        /**
+         * The discriminator of the user
+         * @type {string}
+         */
+        this.discriminator = data.discriminator;
 
+        /**
+         * The avatar's ID of the user
+         * @type {string}
+         */
+        this.avatar = data.avatar;
 
+        /**
+         * Whether or not, the user is a bot
+         * @type {boolean}
+         */
+        this.bot = Boolean(data.bot);
+    }
 
+    /**
+     * @returns {string}
+     */
+    toString() {
+        return `&lt;@${this.id}>`;
+    }
+}
 
-    
-
-
-    <section class="readme">
-        <article><h1>Niscord</h1><p><strong>N</strong>ode + D<strong>iscord</strong> = <strong>Niscord</strong></p>
-<div align="center">
-  <p>
-    <a href="https://discord.gg/hga9SeN"><img src="https://discordapp.com/api/guilds/469539054371864606/embed.png" alt="Discord" /></a>
-  </p>
-  <p>
-    <a href="https://nodei.co/npm/niscord/"><img src="https://nodei.co/npm/niscord.png?downloads=true&stars=true" alt="npmInstallInfo" /></a>
-  </p>
-</div>
-
-<h2>About</h2><p>Niscord is a powerful, easy-to-use JavaScript library for Discord API.</p>
-<ul>
-<li>Powerful</li>
-<li>Object-oriented</li>
-<li>Easy-to-use</li>
-<li>Performant</li>
-<li>Simple</li>
-</ul>
-<h2>Installation</h2><p><em>Node.js 8.0.0 or newer is required.</em></p>
-<p><strong>Stable</strong>: <code>npm i niscord</code></p>
-<p><strong>Master</strong>: <code>npm i niscord/niscord</code></p>
-<p><strong>Dev</strong>: <code>Not published</code></p>
-<h2>Example usage</h2><pre class="prettyprint source lang-js"><code>const Niscord = require('niscord');
-const client = new Niscord.Client();
-
-client.on('ready', () => {
-  console.log('Bot has started.');
-});
-
-client.on('message', (message) => {});
-
-client.login('Client token');</code></pre><h2>Links</h2><ul>
-<li><a href="https://niscord.js.org">Website</a></li>
-<li><a href="https://niscord.js.org">Documentation</a></li>
-<li><a href="https://discord.gg/hga9SeN">Discord</a></li>
-<li><a href="https://github.com/niscord/niscord">GitHub</a></li>
-<li><a href="https://npmjs.com/package/niscord">NPM</a></li>
-</ul></article>
+module.exports = User;</code></pre>
+        </article>
     </section>
-
-
 
 
 

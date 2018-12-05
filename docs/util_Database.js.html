@@ -28,7 +28,7 @@
     
     <input type="text" id="nav-search" placeholder="Search" />
     
-    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.com/niscord/niscord" target="_blank" >GitHub</a></h2><h2><a href="https://npmjs.com/package/niscord" target="_blank" >NPM</a></h2><h3>Classes</h3><ul><li><a href="Client.html">Client</a><ul class='methods'><li data-type='method'><a href="Client.html#start">start</a></li></ul></li><li><a href="Collection.html">Collection</a><ul class='methods'><li data-type='method'><a href="Collection.html#array">array</a></li><li data-type='method'><a href="Collection.html#clone">clone</a></li><li data-type='method'><a href="Collection.html#concat">concat</a></li><li data-type='method'><a href="Collection.html#each">each</a></li><li data-type='method'><a href="Collection.html#equals">equals</a></li><li data-type='method'><a href="Collection.html#every">every</a></li><li data-type='method'><a href="Collection.html#filter">filter</a></li><li data-type='method'><a href="Collection.html#find">find</a></li><li data-type='method'><a href="Collection.html#findKey">findKey</a></li><li data-type='method'><a href="Collection.html#first">first</a></li><li data-type='method'><a href="Collection.html#firstKey">firstKey</a></li><li data-type='method'><a href="Collection.html#keyArray">keyArray</a></li><li data-type='method'><a href="Collection.html#last">last</a></li><li data-type='method'><a href="Collection.html#lastKey">lastKey</a></li><li data-type='method'><a href="Collection.html#map">map</a></li><li data-type='method'><a href="Collection.html#partition">partition</a></li><li data-type='method'><a href="Collection.html#random">random</a></li><li data-type='method'><a href="Collection.html#randomKey">randomKey</a></li><li data-type='method'><a href="Collection.html#reduce">reduce</a></li><li data-type='method'><a href="Collection.html#some">some</a></li><li data-type='method'><a href="Collection.html#sort">sort</a></li><li data-type='method'><a href="Collection.html#sweep">sweep</a></li><li data-type='method'><a href="Collection.html#tap">tap</a></li></ul></li><li><a href="Database.html">Database</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h2><a href="https://github.com/niscord/niscord" target="_blank" >GitHub</a></h2><h2><a href="https://npmjs.com/package/niscord" target="_blank" >NPM</a></h2><h3>Classes</h3><ul><li><a href="Client.html">Client</a><ul class='methods'><li data-type='method'><a href="Client.html#login">login</a></li></ul></li><li><a href="ClientUser.html">ClientUser</a><ul class='methods'><li data-type='method'><a href="ClientUser.html#setPresence">setPresence</a></li><li data-type='method'><a href="ClientUser.html#toString">toString</a></li></ul></li><li><a href="Collection.html">Collection</a><ul class='methods'><li data-type='method'><a href="Collection.html#array">array</a></li><li data-type='method'><a href="Collection.html#clone">clone</a></li><li data-type='method'><a href="Collection.html#concat">concat</a></li><li data-type='method'><a href="Collection.html#each">each</a></li><li data-type='method'><a href="Collection.html#equals">equals</a></li><li data-type='method'><a href="Collection.html#every">every</a></li><li data-type='method'><a href="Collection.html#filter">filter</a></li><li data-type='method'><a href="Collection.html#find">find</a></li><li data-type='method'><a href="Collection.html#findKey">findKey</a></li><li data-type='method'><a href="Collection.html#first">first</a></li><li data-type='method'><a href="Collection.html#firstKey">firstKey</a></li><li data-type='method'><a href="Collection.html#keyArray">keyArray</a></li><li data-type='method'><a href="Collection.html#last">last</a></li><li data-type='method'><a href="Collection.html#lastKey">lastKey</a></li><li data-type='method'><a href="Collection.html#map">map</a></li><li data-type='method'><a href="Collection.html#partition">partition</a></li><li data-type='method'><a href="Collection.html#random">random</a></li><li data-type='method'><a href="Collection.html#randomKey">randomKey</a></li><li data-type='method'><a href="Collection.html#reduce">reduce</a></li><li data-type='method'><a href="Collection.html#some">some</a></li><li data-type='method'><a href="Collection.html#sort">sort</a></li><li data-type='method'><a href="Collection.html#sweep">sweep</a></li><li data-type='method'><a href="Collection.html#tap">tap</a></li></ul></li><li><a href="Database.html">Database</a><ul class='methods'><li data-type='method'><a href="Database.html#add">add</a></li><li data-type='method'><a href="Database.html#delete">delete</a></li><li data-type='method'><a href="Database.html#deleteAll">deleteAll</a></li><li data-type='method'><a href="Database.html#edit">edit</a></li><li data-type='method'><a href="Database.html#get">get</a></li><li data-type='method'><a href="Database.html#getAll">getAll</a></li><li data-type='method'><a href="Database.html#has">has</a></li><li data-type='method'><a href="Database.html#save">save</a></li><li data-type='method'><a href="Database.html#set">set</a></li><li data-type='method'><a href="Database.html#startsWith">startsWith</a></li><li data-type='method'><a href="Database.html#subtract">subtract</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -44,28 +44,172 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>'use strict';
+const fs = require('fs');
+const path = require('path');
 
-const DB = require('depo').Database;
-
-class Database extends DB {
+class Database {
 
     /**
-     * @constructor
      * @param {string} [name] Name of the database
      * @param {DatabaseOptions} [options] Options for the database
      */
-    constructor(name = 'niscord', options) {
-        super(name, options);
+    constructor(name, options = {}) {
 
         /**
+         * Name of the database
          * @type {string}
          */
         this.name = name;
 
         /**
+         * Options for the database
          * @type {DatabaseOptions}
          */
         this.options = options;
+
+        var dbName;
+        if (this.name) {
+            if (this.name.includes('.json')) {
+                this.name = this.name.split('.json')[0];
+            } else if (!this.name.includes('.json')) {
+                dbName = `${this.name}.json`;
+            }
+        } else {
+            dbName = 'niscord.json';
+        }
+        if (!fs.existsSync(path.resolve(dbName))) fs.writeFileSync(path.resolve(dbName), '{ }');
+
+        this.path = path.resolve(dbName);
+        this.database = require(this.path);
+    }
+
+    /**
+     * Adds a number to a value.
+     * @param {string} key
+     * @param {number} data
+     */
+    add(key, data) {
+        if (typeof data !== 'number' || data === undefined) throw new Error('Data must be a number.');
+        let fetched = this._clone(this.database[key] + data);
+        this.database[key] = this._clone(fetched);
+        this.save();
+    }
+
+    /**
+     * Deletes a specified key and its value.
+     * @param {string} key
+     */
+    delete(key) {
+        if (!this.database[key]) return undefined;
+        delete this.database[key];
+        this.save();
+    }
+
+    /**
+     * Deletes all the keys.
+     * @returns {Promise&lt;Database>}
+     */
+    deleteAll() {
+        for (let key in this.database) {
+            this.delete(key);
+            this.save();
+        }
+        return Promise.resolve(this.database);
+    }
+
+    /**
+     * Edits a specified key's value.
+     * @param {string} key
+     * @param {string|boolean|object|number} value
+     */
+    edit(key, value) {
+        this.database[key] = this._clone(value);
+        this.save();
+    }
+
+    /**
+     * Gets a specified key with its value.
+     * @param {string} key
+     * @returns {Promise&lt;DatabaseKey>}
+     */
+    get(key) {
+        if (!this.database[key]) return undefined;
+        return Promise.resolve(this._clone(this.database[key]));
+    }
+
+    /**
+     * Gets all keys.
+     * Returns an object.
+     * @returns {Promise&lt;Database>}
+     */
+    getAll() {
+        if (!this.database) return undefined;
+        return Promise.resolve(this._clone(this.database));
+    }
+
+    /**
+     * Indicates whether a key with the specified key exists or not.
+     * Returns a boolean.
+     * @param {string|Array} key
+     * @param {string} [method='string']
+     * @returns {boolean}
+     */
+    has(key) {
+        if (this.database.hasOwnProperty(key)) {
+            return true;
+        } else if (!this.database.hasOwnProperty(key)) {
+            return false;
+        }
+    }
+
+    /**
+     * Sets a key with specified value.
+     * @param {string} key
+     * @param {string|number|boolean|object} value
+     */
+    set(key, value) {
+        this.database[key] = this._clone(value);
+        this.save();
+    }
+
+    /**
+     * @param {string} key
+     * @param {string} data
+     * @returns {boolean}
+     */
+    startsWith(key, data) {
+        if (data === undefined) return undefined;
+        return this.database[key].startsWith(data);
+    }
+
+    /**
+     * Subtracts a number from a value.
+     * @param {string} key
+     * @param {number} data
+     */
+    subtract(key, data) {
+        if (typeof data !== 'number') throw new Error('Data must be a number.');
+        let fetched = this._clone(this.database[key] - data);
+        this.database[key] = this._clone(fetched);
+        this.save();
+    }
+
+    /**
+     * Saves the database, synchronously.
+     * @param {string} path
+     */
+    save(path) {
+        if (!path) path = this.path;
+        fs.writeFileSync(path, JSON.stringify(this.database));
+    }
+
+    /**
+     * @param {object} data
+     * @private
+     */
+    _clone(data) {
+        if (data === undefined) return undefined;
+        return JSON.parse(JSON.stringify(data));
     }
 }
 
@@ -83,7 +227,7 @@ module.exports = Database;</code></pre>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed Dec 05 2018 16:23:14 GMT+0400 (Gulf Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Wed Dec 05 2018 22:19:04 GMT+0400 (Gulf Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

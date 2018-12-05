@@ -1,10 +1,13 @@
+'use strict';
 const Endpoints = require('../util/Constants').Endpoints;
 
 class Message {
     constructor(client, data, channel) {
         this.channel = channel;
         if (data) this._setup(data);
-        Object.defineProperty(this, 'client', { value: client });
+        Object.defineProperty(this, 'client', {
+            value: client
+        });
     }
 
     _setup(data) {

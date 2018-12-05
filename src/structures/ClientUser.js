@@ -1,8 +1,14 @@
+'use strict';
 const Constants = require('../util/Constants');
+const Endpoints = require('../util/Constants').Endpoints;
+const User = require('./User');
 
-class ClientUser {
+/**
+ * @extends {User}
+ */
+class ClientUser extends User {
     constructor(client, data) {
-        this.data = data;
+        super(client, data);
         Object.defineProperty(this, 'client', {
             value: client
         });
@@ -24,10 +30,19 @@ class ClientUser {
         });
     }
 
+    edit(data) {
+        return this.client.rest.request('patch', Endpoints.USER('@me'), {
+            auth: true,
+            data: data
+        }).then(() => {
+            return this;
+        });
+    }
+
     /**
      * 
      * @param {Object} [options] Options for the presence
-     * @returns {*}
+     * @returns {void}
      */
     setPresence(options = {}) {
         const status = ['online', 'idle', 'dnd', 'offline'];

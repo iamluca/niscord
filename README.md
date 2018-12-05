@@ -1,5 +1,5 @@
 # Niscord
-**N**ode + D**iscord** = Niscord
+**N**ode + D**iscord** = **Niscord**
 <div align="center">
   <p>
     <a href="https://discord.gg/hga9SeN"><img src="https://discordapp.com/api/guilds/469539054371864606/embed.png" alt="Discord" /></a>
@@ -18,12 +18,14 @@ Niscord is a powerful, easy-to-use JavaScript library for Discord API.
  * Simple
 
 ## Installation
+
 *Node.js 8.0.0 or newer is required.*
+
 **Stable**: `npm i niscord`
 
 **Master**: `npm i niscord/niscord`
 
-**Dev**: `npm i niscord/niscord#dev` [Not supported]
+**Dev**: `Not published`
 
 ## Example usage
 ```js
@@ -34,7 +36,9 @@ client.on('ready', () => {
   console.log('Bot has started.');
 });
 
-client.start('Client token');
+client.on('message', (message) => {});
+
+client.login('Client token');
 ```
 
 ## Links

@@ -1,11 +1,15 @@
+'use strict';
+
 class UnavailableGuild {
     constructor(client, data) {
-        Object.defineProperty(this, 'client', { value: client });
+        Object.defineProperty(this, 'client', {
+            value: client
+        });
 
         /**
          * @type {boolean}
          */
-        this.available = !data.unavailable;
+        this.available = !!data.unavailable;
 
         /**
          * @type {String}

@@ -1,7 +1,9 @@
 const Constants = require('../util/Constants');
+const ClientUser = require('../structures/ClientUser');
 const EventEmitter = require('events').EventEmitter;
 const Message = require('../structures/Message');
 const UnavailableGuild = require('../structures/UnavailableGuild');
+const User = require('../structures/User');
 const WebSocket = require('ws');
 
 class WebSocketConnection extends EventEmitter {
@@ -19,6 +21,7 @@ class WebSocketConnection extends EventEmitter {
         this.seq = packet.s;
         switch (packet.t) {
             case 'READY':
+                this.user = new ClientUser(this, packet.d.user);
                 for (var guild of packet.d.guilds) {
                     this.guilds.set(guild.id, new UnavailableGuild(this, guild));
                 }
@@ -27,6 +30,7 @@ class WebSocketConnection extends EventEmitter {
             case 'MESSAGE_CREATE':
                 if (this._state) return;
                 packet.d = new Message(this, packet.d);
+                if (!this.users.has(packet.d.author.id)) this.users.set(packet.d.user.id, new User(this.client, packet.d));
                 this.emit(Constants.Events.MESSAGE_CREATE, packet.d);
                 break;
         }
@@ -60,7 +64,7 @@ class WebSocketConnection extends EventEmitter {
                 properties: {
                     $os: process.platform,
                     $browser: 'Niscord',
-                    $os: 'Niscord' // eslint-disable-line no-dupe-keys
+                    $os: 'Niscord' // eslint-disable-line
                 }
             }
         });

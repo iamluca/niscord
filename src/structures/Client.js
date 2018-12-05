@@ -1,10 +1,10 @@
+'use strict';
 const Collection = require('../util/Collection');
 const Constants = require('../util/Constants');
 const Request = require('../rest/Request');
-const WebSocketConnection = require('../websocket/WebsocketConnection');
+const WebSocketConnection = require('../websocket/WebSocketConnection');
 
 /**
- * @class
  * @extends {WebSocketConnection}
  */
 class Client extends WebSocketConnection {
@@ -56,7 +56,7 @@ class Client extends WebSocketConnection {
      * 
      * @param {string} token Discord client token
      */
-    start(token = this.token) {
+    login(token = this.token) {
         if (!token || typeof token !== 'string') throw new Error(Constants.Errors.INVALID_TOKEN);
         this.token = token;
         this.connect();

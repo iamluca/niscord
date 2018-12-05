@@ -9,20 +9,19 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/boltxyz/nodecord.git"
+    "url": "git+https://github.com/niscord/niscord.git"
   },
-  "author": "boltxyz",
+  "author": "niscord",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/boltxyz/nodecord/issues"
+    "url": "https://github.com/niscord/niscord/issues"
   },
-  "homepage": "https://github.com/boltxyz/nodecord#readme",
+  "homepage": "https://niscord.js.org",
   "devDependencies": {
     "eslint": "^5.9.0",
     "jsdoc": "^3.5.5"
   },
   "dependencies": {
-    "depo": "0.0.2",
     "node-fetch": "^2.3.0",
     "ws": "^6.1.2"
   }

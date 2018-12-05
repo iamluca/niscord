@@ -7,10 +7,12 @@ module.exports = {
     ClientUser: require('./structures/ClientUser'),
     Message: require('./structures/Message'),
     UnavailableGuild: require('./structures/UnavailableGuild'),
+    User: require('./structures/User'),
 
     // Util
     Collection: require('./util/Collection'),
     Constants: require('./util/Constants'),
     Database: require('./util/Database'),
+    Util: require('./util/Util'),
     version: require('../package.json').version
 };
