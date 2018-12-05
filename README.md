@@ -23,8 +23,10 @@ Niscord is a powerful, easy-to-use JavaScript library for Discord API.
 **Stable**: `npm i niscord` [Not supported]
 =======
 **Stable**: `npm i niscord`
+
 >>>>>>> origin/master
 **Master**: `npm i niscord/niscord`
+
 **Dev**: `npm i niscord/niscord#dev` [Not supported]
 
 ## Example usage
@@ -43,5 +45,5 @@ client.start('Client token');
 * [Website](https://niscord.js.org)
 * [Documentation](https://niscord.js.org)
 * [Discord](https://discord.gg/hga9SeN)
-* [NPM](https://npmjs.com/package/niscord)
 * [GitHub](https://github.com/niscord/niscord)
+* [NPM](https://npmjs.com/package/niscord)
