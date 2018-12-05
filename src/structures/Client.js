@@ -1,5 +1,3 @@
-'use strict';
-
 const Collection = require('../util/Collection');
 const Constants = require('../util/Constants');
 const Request = require('../rest/Request');
@@ -7,7 +5,7 @@ const WebSocketConnection = require('../websocket/WebsocketConnection');
 
 /**
  * @class
- * @extends {EventEmitter}
+ * @extends {WebSocketConnection}
  */
 class Client extends WebSocketConnection {
 
@@ -16,7 +14,7 @@ class Client extends WebSocketConnection {
      * @param {ClientOptions} [options] Options for the client
      */
     constructor(options = {}) {
-        super();
+        super(options);
 
         /**
          * Options for the client
@@ -61,6 +59,7 @@ class Client extends WebSocketConnection {
     start(token = this.token) {
         if (!token || typeof token !== 'string') throw new Error(Constants.Errors.INVALID_TOKEN);
         this.token = token;
+        this.connect();
     }
 
     /**

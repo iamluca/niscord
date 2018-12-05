@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>structures/Client.js - Documentation</title>
+    <title>structures/Message.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -33,7 +33,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">structures/Client.js</h1>
+    <h1 class="page-title">structures/Message.js</h1>
     
 
     
@@ -43,82 +43,77 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>'use strict';
+            <pre class="prettyprint source linenums"><code>const Endpoints = require('../util/Constants').Endpoints;
 
-const Collection = require('../util/Collection');
-const Constants = require('../util/Constants');
-const Request = require('../rest/Request');
-const WebSocketConnection = require('../websocket/WebsocketConnection');
+class Message {
+    constructor(client, data, channel) {
+        this.channel = channel;
+        if (data) this._setup(data);
+        Object.defineProperty(this, 'client', { value: client });
+    }
 
-/**
- * @class
- * @extends {EventEmitter}
- */
-class Client extends WebSocketConnection {
-
-    /**
-     * @constructor
-     * @param {ClientOptions} [options] Options for the client
-     */
-    constructor(options = {}) {
-        super(options);
+    _setup(data) {
 
         /**
-         * Options for the client
-         * @type {ClientOptions}
+         * @type {string}
          */
-        this.options = options;
+        this.id = data.id;
 
         /**
-         * Discord client token
-         * @type {?string}
+         * @type {string}
          */
-        this.token = null;
+        this.type = data.type;
 
         /**
-         * @type {}
+         * @type {User}
          */
-        this.rest = new Request(this);
+        this.author = this.client.users.add(data.author, !data.webhook_id);
 
         /**
-         * Collection of users, this client is currently handling.
-         * @type {Collection}
+         * @type {string}
          */
-        this.users = new Collection();
+        this.content = data.content;
 
         /**
-         * Collection of guilds, this client is currently handling.
-         * @type {Collection}
+         * @type {boolean}
          */
-        this.guilds = new Collection();
+        this.tts = data.tts;
 
         /**
-         * Collection of channels, this client is currently handling.
-         * @type {Collection}
+         * @type {string}
          */
-        this.channels = new Collection();
+        this.nonce = data.nonce;
+    }
+
+    get guild() {
+        return this.channel.guild || null;
+    }
+
+    get member() {
+        return this.guild ? this.guild.members.get(this.author.id) || null : null;
     }
 
     /**
      * 
-     * @param {string} token Discord client token
+     * @param {string} [content=''] 
+     * @param {object} [options]
+     * @returns {Promise&lt;Message>}
      */
-    start(token = this.token) {
-        if (!token || typeof token !== 'string') throw new Error(Constants.Errors.INVALID_TOKEN);
-        this.token = token;
-        this.connect();
-    }
-
-    /**
-     * @param {string} script
-     * @private
-     */
-    _eval(script) {
-        return eval(script);
+    edit(content, options = {}) {
+        if (!options) options = {};
+        return this.client.rest.request('patch', Endpoints.CHANNEL_MESSAGE(this.channel.id, this.id), {
+            auth: true,
+            data: {
+                content: content,
+                embed: options.embed
+            }
+        }).then(() => {
+            return this;
+        });
     }
 }
 
-module.exports = Client;</code></pre>
+module.exports = Message;</code></pre>
         </article>
     </section>
 

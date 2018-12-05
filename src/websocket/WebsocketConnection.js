@@ -1,7 +1,6 @@
-'use strict';
-
 const Constants = require('../util/Constants');
 const EventEmitter = require('events').EventEmitter;
+const Message = require('../structures/Message');
 const UnavailableGuild = require('../structures/UnavailableGuild');
 const WebSocket = require('ws');
 
@@ -10,6 +9,10 @@ class WebSocketConnection extends EventEmitter {
         super();
         this.socket = new WebSocket(`${Constants.WebSocket.GATEWAY.URL}/?v=${Constants.WebSocket.GATEWAY.VERSION}&encoding=${Constants.WebSocket.GATEWAY.ENCODING}`);
         this._state = null;
+    }
+
+    connect() {
+        return this.emitMessage();
     }
 
     emitEvent(packet) {
@@ -21,10 +24,16 @@ class WebSocketConnection extends EventEmitter {
                 }
                 this.guildLength = packet.d.guilds.length;
                 break;
+            case 'MESSAGE_CREATE':
+                if (this._state) return;
+                packet.d = new Message(this, packet.d);
+                this.emit(Constants.Events.MESSAGE_CREATE, packet.d);
+                break;
         }
     }
+
     emitMessage() {
-        this.socket.addEventEmitter('message', (event) => {
+        this.socket.addEventListener(Constants.Events.MESSAGE_CREATE, (event) => {
             const packet = JSON.parse(event.data);
             switch (packet.op) {
                 case Constants.WebSocket.OPCODES.DISPATCH:
@@ -44,7 +53,6 @@ class WebSocketConnection extends EventEmitter {
                 d: null
             });
         }, interval);
-
         this.send({
             op: Constants.WebSocket.OPCODES.IDENTIFY,
             d: {

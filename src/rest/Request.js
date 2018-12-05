@@ -26,20 +26,15 @@ class Request {
         const methods = ['get', 'post', 'delete', 'patch', 'put'];
         const requestUrl = Constants.Http.API + Constants.Http.VERSION;
         var headers = {};
-        var body;
         if (!methods.includes(this.method)) throw new Error('Invalid method.');
         if (this.options.auth !== false) headers.Authorization = this.getAuth();
         if (this.options.reason) headers['User-Agent'] = Constants.UserAgent;
-        if (this.options.data != null) {
-            body = JSON.stringify(this.data);
-            headers['Content-Type'] = 'application/json';
-        }
 
         return fetch(requestUrl, {
             method: this.method,
             headers,
             agent,
-            body,
+            body: this.options.data
         });
     }
 }

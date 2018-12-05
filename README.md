@@ -20,12 +20,19 @@ Niscord is a powerful, easy-to-use JavaScript library for Discord API.
 ## Installation
 *Node.js 8.0.0 or newer is required.*
 **Stable**: `npm i niscord` [Not supported]
-**Master**: `npm i decord/niscord`
-**Dev**: `npm i decord/niscord#dev` [Not supported]
+**Master**: `npm i niscord/niscord`
+**Dev**: `npm i niscord/niscord#dev` [Not supported]
 
 ## Example usage
 ```js
-Not yet stabled to be used
+const Niscord = require('niscord');
+const client = new Niscord.Client();
+
+client.on('ready', () => {
+  console.log('Bot has started.');
+});
+
+client.start('Client token');
 ```
 
 ## Links
