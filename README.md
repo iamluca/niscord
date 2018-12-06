@@ -4,7 +4,7 @@
   </p>
   <p>
     <a href="https://discord.gg/hga9SeN"><img src="https://discordapp.com/api/guilds/469539054371864606/embed.png" alt="Discord" /></a>
-    <a href="https://www.npmjs.com/package/discord.js"><img src="https://img.shields.io/npm/v/discord.js.svg?maxAge=3600" alt="npmVersion" /></a>
+    <a href="https://www.npmjs.com/package/niscord"><img src="https://img.shields.io/npm/v/niscord.svg?maxAge=3600" alt="npmVersion" /></a>
     <a href="https://www.npmjs.com/package/niscord"><img src="https://img.shields.io/npm/dt/niscord.svg?maxAge=3600" alt="npmDownloads" /></a>
   </p>
   <p>
