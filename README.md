@@ -1,5 +1,3 @@
-# Niscord
-**N**ode + D**iscord** = [**Niscord**](https://niscord.js.org)
 <div id="info" align="center">
   <p>
     <a href="https://niscord.js.org"><img src="https://niscord.js.org/assets/banner.png" width="546" alt="banner" /></a>
