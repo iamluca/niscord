@@ -5,6 +5,7 @@ module.exports = {
     // Structures
     Client: require('./structures/Client'),
     ClientUser: require('./structures/ClientUser'),
+    Guild: require('./structures/Guild'),
     Message: require('./structures/Message'),
     UnavailableGuild: require('./structures/UnavailableGuild'),
     User: require('./structures/User'),

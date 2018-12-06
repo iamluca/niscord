@@ -33,6 +33,8 @@ class WebSocketManager extends EventEmitter {
                 if (!this.users.has(packet.d.author.id)) this.users.set(packet.d.user.id, new User(this.client, packet.d));
                 this.emit(Constants.Events.MESSAGE_CREATE, packet.d);
                 break;
+            case 'GUILD_CREATE':
+                const guild = new Guild()
         }
     }
 

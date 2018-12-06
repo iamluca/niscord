@@ -24,7 +24,7 @@ class Client extends WebSocketManager {
 
         /**
          * Discord client token
-         * @type {?string}
+         * @type {string}
          */
         this.token = null;
 
