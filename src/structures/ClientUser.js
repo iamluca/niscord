@@ -5,6 +5,8 @@ const Endpoints = require('../util/Constants').Endpoints;
 const User = require('./User');
 
 /**
+ * Represents a client user on Discord
+ * @class
  * @extends {User}
  */
 class ClientUser extends User {

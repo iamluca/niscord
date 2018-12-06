@@ -1,5 +1,9 @@
 'use strict';
 
+/**
+ * Represents a user on Discord
+ * @class
+ */
 class User {
     constructor(client, data) {
         Object.defineProperty(this, 'client', {

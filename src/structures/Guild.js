@@ -4,6 +4,10 @@ const Collection = require('../util/Collection');
 const Endpoints = require('../util/Constants').Endpoints;
 const Util = require('../util/Util');
 
+/**
+ * Represents a guild on Discord
+ * @class
+ */
 class Guild {
     constructor(client, data) {
 
