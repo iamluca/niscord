@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>structures/Client.js - Documentation</title>
+    <title>structures/Guild.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -33,7 +33,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">structures/Client.js</h1>
+    <h1 class="page-title">structures/Guild.js</h1>
     
 
     
@@ -44,81 +44,176 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>'use strict';
+
 const Collection = require('../util/Collection');
-const Constants = require('../util/Constants');
-const RequestManager = require('../rest/RequestManager');
-const WebSocketManager = require('../websocket/WebSocketManager');
+const Endpoints = require('../util/Constants').Endpoints;
+const Util = require('../util/Util');
 
-/**
- * @extends {WebSocketManager}
- */
-class Client extends WebSocketManager {
-
-    /**
-     * @constructor
-     * @param {ClientOptions} [options] Options for the client
-     */
-    constructor(options = {}) {
-        super(options);
+class Guild {
+    constructor(client, data) {
 
         /**
-         * Options for the client
-         * @type {ClientOptions}
+         * @name Guild#client
+         * @type {Client}
+         * @readonly
          */
-        this.options = options;
+        Object.defineProperty(this, 'client', { value: client });
 
         /**
-         * Discord client token
-         * @type {string}
-         */
-        this.token = null;
-
-        /**
-         * @type {}
-         */
-        this.rest = new RequestManager(this);
-
-        /**
-         * Collection of users, this client is currently handling.
+         * A collection of members that are currently in this guild
          * @type {Collection}
          */
-        this.users = new Collection();
+        this.members = new Collection();
 
         /**
-         * Collection of guilds, this client is currently handling.
-         * @type {Collection}
-         */
-        this.guilds = new Collection();
-
-        /**
-         * Collection of channels, this client is currently handling.
+         * A collection of channels that are currently in this guild
          * @type {Collection}
          */
         this.channels = new Collection();
+
+        /**
+         * A collection of roles that are currently in this guild
+         * @type {Collection}
+         */
+        this.roles = new Collection();
+
+        if (data) this._setup(data);
+    }
+
+    _setup(data) {
+
+        /**
+         * The name of the guild
+         * @type {string}
+         */
+        this.name = data.name;
+
+        /**
+         * The ID of the guild
+         * @type {string}
+         */
+        this.id = data.id;
+
+        /**
+         * The icon of the guild
+         * @type {?string}
+         */
+        this.icon = data.icon;
+
+        /**
+         * The splash of the guild
+         * @type {?string}
+         */
+        this.splash = data.splash;
+
+        /**
+         * The region of the guild
+         * @type {string}
+         */
+        this.region = data.region;
+
+        /**
+         * The member count of the guild
+         * @type {number}
+         */
+        this.memberCount = data.member_count || this.memberCount;
+
+        /**
+         * Whether or not, the guild is large (more than 250 members)
+         */
+        this.large = Boolean('large' in data ? data.large : this.large);
+
+        /**
+         * The features of the guild
+         * @type {Object[]}
+         */
+        this.features = data.features;
+
+        /**
+         * The ID of the application that created the guild, if any
+         * @type {?string}
+         */
+        this.applicationID = data.application_id;
+
+        /**
+         * The time in seconds before a user is counted as "away from keyboard"
+         * @type {?number}
+         */
+        this.afkTimeout = data.afk_timeout;
+
+        /**
+         * The voice channel ID where AFK members are moved
+         * @type {?string}
+         */
+        this.afkChannelID = data.afk_channel_id;
+
+        /**
+         * The systen channel ID of the guild
+         * @type {?string}
+         */
+        this.systemChannelID = data.system_channel_id;
+
+        /**
+         * Whether or not, embedded images are enabled on this guild
+         * @type {boolean}
+         */
+        this.embedEnabled = data.embed_enabled;
+
+        /**
+         * The verification level of the guild
+         * @type {number}
+         */
+        this.verificationLevel = data.verification_level;
+
+        this.available = !data.unavailable;
     }
 
     /**
-     * Logs in with the client, forms a connection with the websocket.
-     * @param {string} token Discord client token
+     * Bans a user from the guild
+     * @param {User} user The user to ban
+     * @param {Object|string|number} [options] Options for the ban
+     * @param {number} [options.days=0] Number of days' messages to be deleted
+     * @param {string} [options.reason] The reason for the ban
+     * @returns {GuildMember|User|string}
+     * @example
+     * // Bans a user from the guild using ID
+     * Guild.ban('User ID')
+     *   .then((user) => console.log(`Banned: ${user.id}`))
+     *   .catch(console.error);
+     * @example
+     * // Bans a user from the guild using the user object with days and reason.
+     * Guild.ban(user, { days: 7, reason: 'Test' })
+     *   .then((user) => console.log(`Banned: ${user.id}`))
+     *   .catch(console.error);
      */
-    login(token = this.token) {
-        if (!token || typeof token !== 'string') throw new Error(Constants.Errors.INVALID_TOKEN);
-        this.token = token;
-        this.connect();
-    }
-
-    /**
-     * Evaluates JavaScript code.
-     * @param {string} script
-     * @returns {*}
-     * @private
-     */
-    _eval(script) {
-        return eval(script);
+    ban(user, options = {}) {
+        const id = Util.resolveUserID(user);
+        const url = `${Endpoints.GUILD_BANS(this.id)}/${id}?${Util.stringify(options)}`;
+        if (!id) throw new Error('Couldn\'t resolve the user ID.');
+        if (typeof options === 'number') {
+            options = { reason: null, 'delete-message-days': options };
+        } else if (typeof options === 'string') {
+            options = { reason: options, 'delete-message-days': 0 };
+        }
+        if (options.days) options['delete-message-days'] = options.days;
+        return this.client.rest.request('put', url, {
+            auth: true
+        }).then(() => {
+            const resolvedUser = Util.resolveUser(id);
+            const resolvedMember = this.members.get(user.id);
+            if (resolvedUser &amp;&amp; resolvedMember) {
+                return resolvedUser || resolvedMember;
+            } else if (resolvedUser) {
+                return resolvedUser;
+            } else if (resolvedMember) {
+                return resolvedMember;
+            }
+            return id;
+        });
     }
 }
 
-module.exports = Client;</code></pre>
+module.exports = Guild;</code></pre>
         </article>
     </section>
 

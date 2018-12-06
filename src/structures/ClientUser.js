@@ -54,7 +54,9 @@ class ClientUser extends User {
      * @returns {Promise<ClientUser>}
      * @example
      * // Sets the username of the client user
-     * setUsername('niscord');
+     * Client.user.setUsername('niscord');
+     *   .then((user) => console.log(`Edited: ${user.username}`));
+     *   .catch(console.error);
      */
     setUsername(username, password) {
         return this.edit({ username, password });

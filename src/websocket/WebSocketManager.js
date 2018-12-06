@@ -1,6 +1,7 @@
 const Constants = require('../util/Constants');
 const ClientUser = require('../structures/ClientUser');
 const EventEmitter = require('events').EventEmitter;
+const Guild = require('../structures/Guild');
 const Message = require('../structures/Message');
 const UnavailableGuild = require('../structures/UnavailableGuild');
 const User = require('../structures/User');
@@ -14,36 +15,15 @@ class WebSocketManager extends EventEmitter {
     }
 
     connect() {
-        return this.emitMessage();
+        return this.onMessage();
     }
 
-    emitEvent(packet) {
-        this.seq = packet.s;
-        switch (packet.t) {
-            case 'READY':
-                this.user = new ClientUser(this, packet.d.user);
-                for (var guild of packet.d.guilds) {
-                    this.guilds.set(guild.id, new UnavailableGuild(this, guild));
-                }
-                this.guildLength = packet.d.guilds.length;
-                break;
-            case 'MESSAGE_CREATE':
-                if (this._state) return;
-                packet.d = new Message(this, packet.d);
-                if (!this.users.has(packet.d.author.id)) this.users.set(packet.d.user.id, new User(this.client, packet.d));
-                this.emit(Constants.Events.MESSAGE_CREATE, packet.d);
-                break;
-            case 'GUILD_CREATE':
-                const guild = new Guild()
-        }
-    }
-
-    emitMessage() {
+    onMessage() {
         this.socket.addEventListener(Constants.Events.MESSAGE_CREATE, (event) => {
             const packet = JSON.parse(event.data);
             switch (packet.op) {
                 case Constants.WebSocket.OPCODES.DISPATCH:
-                    this.emitEvent(packet);
+                    this.onEvent(packet);
                     break;
                 case Constants.WebSocket.OPCODES.HELLO:
                     this.heartbeat(packet.d.heartbeat_interval);
@@ -70,6 +50,35 @@ class WebSocketManager extends EventEmitter {
                 }
             }
         });
+    }
+
+    onEvent(packet) {
+        this.seq = packet.s;
+        switch (packet.t) {
+            case 'READY':
+                this.user = new ClientUser(this, packet.d.user);
+                for (let guild of packet.d.guilds) {
+                    this.guilds.set(guild.id, new UnavailableGuild(this, guild));
+                }
+                this.guildLength = packet.d.guilds.length;
+                break;
+            case 'MESSAGE_CREATE':
+                if (this._state) return;
+                packet.d = new Message(this, packet.d);
+                if (!this.users.has(packet.d.author.id)) this.users.set(packet.d.user.id, new User(this.client, packet.d));
+                this.emit(Constants.Events.MESSAGE_CREATE, packet.d);
+                break;
+            case 'GUILD_CREATE':
+                let guild = new Guild(this, packet.d);
+                this.guilds.set(guild.id, guild);
+                this.guildLength = this.guildLength - 1;
+                if (this.guildLength === 0) {
+                    this._state = Constants.Events.READY;
+                    this.emit(Constants.Events.READY);
+                }
+                this.emit(Constants.Events.GUILD_CREATE, guild);
+                break;
+        }
     }
 
     send(data) {

@@ -3,15 +3,7 @@
 const Endpoints = require('../util/Constants').Endpoints;
 
 class Message {
-    constructor(client, data, channel) {
-
-        /**
-         * The channel, this message was sent in.
-         * @type {TextChannel|DMChannel|GroupDMChannel}
-         */
-        this.channel = channel;
-
-        if (data) this._setup(data);
+    constructor(client, data) {
 
         /**
          * @type {Client}
@@ -20,9 +12,17 @@ class Message {
         Object.defineProperty(this, 'client', {
             value: client
         });
+
+        if (data) this._setup(data);
     }
 
     _setup(data) {
+
+        /**
+         * The channel, this message was sent in.
+         * @type {TextChannel|DMChannel|GroupDMChannel}
+         */
+        this.channel = this.client.channels.get(data.channel_id);
 
         /**
          * The ID of the message
@@ -39,9 +39,8 @@ class Message {
         /**
          * the author of the message (returns User)
          * @type {User}
-         * @returns {User}
          */
-        this.author = this.client.users.add(data.author, !data.webhook_id);
+        this.author = this.client.users.get(data.author.id);
 
         /**
          * The content of the message
@@ -87,7 +86,7 @@ class Message {
      * @param {Object} [options]
      * @returns {Promise<Message>}
      * @example
-     * edit('New content.')
+     * Message.edit('New content.')
      *   .then((msg) => console.log(msg.content))
      *   .catch(console.error);
      */
@@ -110,6 +109,35 @@ class Message {
         });
     }
 
+    /**
+     * Deletes the message
+     * @param {number} [timeout=0] Waiting time to delete the message
+     * @returns {Promise<Message>}
+     * @example
+     * Message.delete()
+     *   .then((msg) => console.log(`Deleted: ${msg.id}`));
+     *   .catch(console.error);
+     */
+    delete(timeout = 0) {
+        if (timeout <= 0) {
+            return this.client.rest.request('delete', Endpoints.CHANNEL_MESSAGE(this.channel.id, this.id), {
+                auth: true
+            }).then(() => {
+                return this;
+            });
+        } else {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    resolve(this.delete());
+                }, timeout);
+            });
+        }
+    }
+
+    /**
+     * Pins a message to the channel
+     * @returns {Promise<Message>}
+     */
     pin() {
         return this.client.rest.request('put', Endpoints.CHANNEL_PIN(this.channel, this.id), {
             auth: true
@@ -118,12 +146,22 @@ class Message {
         });
     }
 
+    /** Unpins a message from a channel
+     * @returns {Promise<Message>}
+     */
     unpin() {
         return this.client.rest.request('delete', Endpoints.CHANNEL_PIN(this.channel, this.id), {
             auth: true
         }).then(() => {
             return this;
         });
+    }
+
+    /**
+     * @returns {string}
+     */
+    toString() {
+        return this.content;
     }
 }
 

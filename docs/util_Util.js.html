@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>structures/Client.js - Documentation</title>
+    <title>util/Util.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -33,7 +33,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">structures/Client.js</h1>
+    <h1 class="page-title">util/Util.js</h1>
     
 
     
@@ -44,81 +44,86 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>'use strict';
-const Collection = require('../util/Collection');
-const Constants = require('../util/Constants');
-const RequestManager = require('../rest/RequestManager');
-const WebSocketManager = require('../websocket/WebSocketManager');
 
-/**
- * @extends {WebSocketManager}
- */
-class Client extends WebSocketManager {
+const Guild = require('../structures/Guild');
+const Message = require('../structures/Message');
+const User = require('../structures/User');
 
-    /**
-     * @constructor
-     * @param {ClientOptions} [options] Options for the client
-     */
-    constructor(options = {}) {
-        super(options);
+class Util {
+  constructor() {
+    throw new Error(`${this.constructor.name} class may not be invoked.`);
+  }
 
-        /**
-         * Options for the client
-         * @type {ClientOptions}
-         */
-        this.options = options;
+  /**
+   * 
+   * @param {User} user The user to identify
+   * @returns {?User}
+   */
+  static resolveUser(user) {
+    if (user instanceof User) return user;
+    if (typeof user === 'string') return this.client.users.get(user) || null;
+    if (user instanceof GuildMember) return user.user;
+    if (user instanceof Message) return user.author;
+    if (user instanceof Guild) return user.owner;
+    return null;
+  }
 
-        /**
-         * Discord client token
-         * @type {string}
-         */
-        this.token = null;
+  /**
+   * Resolves a User to a user ID.
+   * @param {User} user The user to identify
+   * @returns {string}
+   */
+  static resolveUserID(user) {
+    if (user instanceof User || user instanceof GuildMember) return user.id;
+    if (typeof user === 'string') return user || null;
+    if (user instanceof Message) return user.author.id;
+    if (user instanceof Guild) return user.ownerID;
+    return null;
+  }
 
-        /**
-         * @type {}
-         */
-        this.rest = new RequestManager(this);
+  /**
+   * 
+   * @param {Object} obj
+   * @param {string} sep 
+   * @param {string} eq 
+   * @param {string} name 
+   */
+  static stringify(obj, sep, eq, name) {
+    function stringifyPrimitive(v) {
+      switch (typeof v) {
+        case 'string':
+          return v;
+        case 'boolean':
+          return v ? 'true' : 'false';
+        case 'number':
+          return isFinite(v) ? v : '';
+        default:
+          return '';
+      }
+    };
 
-        /**
-         * Collection of users, this client is currently handling.
-         * @type {Collection}
-         */
-        this.users = new Collection();
-
-        /**
-         * Collection of guilds, this client is currently handling.
-         * @type {Collection}
-         */
-        this.guilds = new Collection();
-
-        /**
-         * Collection of channels, this client is currently handling.
-         * @type {Collection}
-         */
-        this.channels = new Collection();
+    sep = sep || '&amp;';
+    eq = eq || '=';
+    if (obj === null) obj = undefined;
+    if (typeof obj === 'object') {
+      return Object.keys(obj).map(function (k) {
+        var ks = encodeURIComponent(stringifyPrimitive(k)) + eq;
+        if (Array.isArray(obj[k])) {
+          return obj[k].map(function (v) {
+            return ks + encodeURIComponent(stringifyPrimitive(v));
+          }).join(sep);
+        } else {
+          return ks + encodeURIComponent(stringifyPrimitive(obj[k]));
+        }
+      }).filter(Boolean).join(sep);
     }
-
-    /**
-     * Logs in with the client, forms a connection with the websocket.
-     * @param {string} token Discord client token
-     */
-    login(token = this.token) {
-        if (!token || typeof token !== 'string') throw new Error(Constants.Errors.INVALID_TOKEN);
-        this.token = token;
-        this.connect();
-    }
-
-    /**
-     * Evaluates JavaScript code.
-     * @param {string} script
-     * @returns {*}
-     * @private
-     */
-    _eval(script) {
-        return eval(script);
-    }
+    if (!name) return '';
+    return encodeURIComponent(stringifyPrimitive(name)) + eq + encodeURIComponent(stringifyPrimitive(obj));
+  }
 }
 
-module.exports = Client;</code></pre>
+module.exports = Util;
+</code></pre>
         </article>
     </section>
 

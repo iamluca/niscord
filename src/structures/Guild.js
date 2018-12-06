@@ -35,7 +35,7 @@ class Guild {
         if (data) this._setup(data);
     }
 
-    setup(data) {
+    _setup(data) {
 
         /**
          * The name of the guild
@@ -132,12 +132,12 @@ class Guild {
      * @returns {GuildMember|User|string}
      * @example
      * // Bans a user from the guild using ID
-     * ban('User ID')
+     * Guild.ban('User ID')
      *   .then((user) => console.log(`Banned: ${user.id}`))
      *   .catch(console.error);
      * @example
      * // Bans a user from the guild using the user object with days and reason.
-     * ban(user, { days: 7, reason: 'Test' })
+     * Guild.ban(user, { days: 7, reason: 'Test' })
      *   .then((user) => console.log(`Banned: ${user.id}`))
      *   .catch(console.error);
      */
