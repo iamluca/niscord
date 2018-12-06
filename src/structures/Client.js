@@ -1,13 +1,13 @@
 'use strict';
 const Collection = require('../util/Collection');
 const Constants = require('../util/Constants');
-const Request = require('../rest/Request');
-const WebSocketConnection = require('../websocket/WebSocketConnection');
+const RequestManager = require('../rest/RequestManager');
+const WebSocketManager = require('../websocket/WebSocketManager');
 
 /**
- * @extends {WebSocketConnection}
+ * @extends {WebSocketManager}
  */
-class Client extends WebSocketConnection {
+class Client extends WebSocketManager {
 
     /**
      * @constructor
@@ -31,7 +31,7 @@ class Client extends WebSocketConnection {
         /**
          * @type {}
          */
-        this.rest = new Request(this);
+        this.rest = new RequestManager(this);
 
         /**
          * Collection of users, this client is currently handling.
@@ -53,7 +53,7 @@ class Client extends WebSocketConnection {
     }
 
     /**
-     * 
+     * Logs in with the client, forms a connection with the websocket.
      * @param {string} token Discord client token
      */
     login(token = this.token) {
@@ -63,7 +63,9 @@ class Client extends WebSocketConnection {
     }
 
     /**
+     * Evaluates JavaScript code.
      * @param {string} script
+     * @returns {*}
      * @private
      */
     _eval(script) {

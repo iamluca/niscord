@@ -1,5 +1,4 @@
 'use strict';
-
 /*
 Class "Collection" is from Discord.js
 https://github.com/discordjs/discord.js/blob/master/src/util/Collection.js

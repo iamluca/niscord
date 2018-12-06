@@ -1,4 +1,5 @@
 'use strict';
+
 const Constants = require('../util/Constants');
 const Endpoints = require('../util/Constants').Endpoints;
 const User = require('./User');
@@ -31,18 +32,38 @@ class ClientUser extends User {
     }
 
     edit(data) {
+        const _data = {};
+        _data.username = data.username || this.client.user;
+        if (!this.client.user.bot) {
+            _data.email = data.email || this.client.user.email;
+            _data.password = data.password;
+            if (data.new_password) _data.new_password = data.newPassword;
+        }
         return this.client.rest.request('patch', Endpoints.USER('@me'), {
             auth: true,
-            data: data
+            data: _data
         }).then(() => {
             return this;
         });
     }
 
     /**
-     * 
+     * Sets the username of the client user
+     * @param {string} username The new username of the user
+     * @param {string} [password] Password for the user (only for user account)
+     * @returns {Promise<ClientUser>}
+     * @example
+     * // Sets the username of the client user
+     * setUsername('niscord');
+     */
+    setUsername(username, password) {
+        return this.edit({ username, password });
+    }
+
+    /**
+     *
      * @param {Object} [options] Options for the presence
-     * @returns {void}
+     * @returns {*}
      */
     setPresence(options = {}) {
         const status = ['online', 'idle', 'dnd', 'offline'];

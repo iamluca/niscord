@@ -7,7 +7,7 @@ if (https.Agent) var agent = new https.Agent({
     keepAlive: true
 });
 
-class Request {
+class RequestManager {
     constructor(client) {
         this.client = client;
         this.tokenPrefix = 'Bot';
@@ -39,4 +39,4 @@ class Request {
     }
 }
 
-module.exports = Request;
+module.exports = RequestManager;

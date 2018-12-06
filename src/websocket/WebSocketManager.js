@@ -6,7 +6,7 @@ const UnavailableGuild = require('../structures/UnavailableGuild');
 const User = require('../structures/User');
 const WebSocket = require('ws');
 
-class WebSocketConnection extends EventEmitter {
+class WebSocketManager extends EventEmitter {
     constructor() {
         super();
         this.socket = new WebSocket(`${Constants.WebSocket.GATEWAY.URL}/?v=${Constants.WebSocket.GATEWAY.VERSION}&encoding=${Constants.WebSocket.GATEWAY.ENCODING}`);
@@ -75,4 +75,4 @@ class WebSocketConnection extends EventEmitter {
     }
 }
 
-module.exports = WebSocketConnection;
+module.exports = WebSocketManager;
