@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>util/Database.js - Documentation</title>
+    <title>structures/GuildMember.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -33,7 +33,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">util/Database.js</h1>
+    <h1 class="page-title">structures/GuildMember.js</h1>
     
 
     
@@ -45,176 +45,72 @@
         <article>
             <pre class="prettyprint source linenums"><code>'use strict';
 
-const fs = require('fs');
-const path = require('path');
+const Constants = require('../util/Constants');
 
-class Database {
-
-    /**
-     * @param {string} [name] Name of the database
-     * @param {DatabaseOptions} [options] Options for the database
-     */
-    constructor(name, options = {}) {
+class GuildMember {
+    constructor(guild, data) {
 
         /**
-         * Name of the database
-         * @type {string}
+         * Client
+         * @name GuildMember#client
+         * @type {Client}
+         * @readonly
          */
-        this.name = name;
+        Object.defineProperty(this, 'client', { value: client });
 
         /**
-         * Options for the database
-         * @type {DatabaseOptions}
+         * @name GuildMember#guild
+         * @type {Guild}
          */
-        this.options = options;
+        Object.defineProperty(this, 'guild', { value: data.guild });
 
-        var dbName;
-        if (this.name) {
-            if (this.name.includes('.json')) {
-                this.name = this.name.split('.json')[0];
-            } else if (!this.name.includes('.json')) {
-                dbName = `${this.name}.json`;
-            }
-        } else {
-            dbName = 'niscord.json';
-        }
-        if (!fs.existsSync(path.resolve(dbName))) fs.writeFileSync(path.resolve(dbName), '{ }');
 
-        this.path = path.resolve(dbName);
-        this.database = require(this.path);
+        /**
+         * The guild of the member
+         * @type {Guild}
+         */
+        this.guild = guild;
+
+        if (data) this._setup(data);
     }
 
-    /**
-     * Adds a number to a value.
-     * @param {string} key
-     * @param {number} data
-     */
-    add(key, data) {
-        if (typeof data !== 'number' || data === undefined) throw new Error('Data must be a number.');
-        let fetched = this._clone(this.database[key] + data);
-        this.database[key] = this._clone(fetched);
-        this.save();
-    }
+    _setup(data) {
 
-    /**
-     * Deletes a specified key and its value.
-     * @param {string} key
-     */
-    delete(key) {
-        if (!this.database[key]) return undefined;
-        delete this.database[key];
-        this.save();
-    }
+        /**
+         * Whether or not, the member is deafened
+         * @type {boolean}
+         */
+        this.deaf = Boolean(data.deaf);
 
-    /**
-     * Deletes all the keys.
-     * @returns {Promise&lt;Database>}
-     */
-    deleteAll() {
-        for (let key in this.database) {
-            this.delete(key);
-            this.save();
-        }
-        return Promise.resolve(this.database);
-    }
+        /**
+         * Whether or not, the member is mute
+         * @type {boolean}
+         */
+        this.mute = Boolean(data.mute);
 
-    /**
-     * Edits a specified key's value.
-     * @param {string} key
-     * @param {string|boolean|object|number} value
-     */
-    edit(key, value) {
-        this.database[key] = this._clone(value);
-        this.save();
-    }
+        /**
+         * Whether or not, the member is self-deafened
+         * @type {boolean}
+         */
+        this.selfDeaf = Boolean(data.self_deaf);
 
-    /**
-     * Gets a specified key with its value.
-     * @param {string} key
-     * @returns {Promise&lt;DatabaseKey>}
-     */
-    get(key) {
-        if (!this.database[key]) return undefined;
-        return Promise.resolve(this._clone(this.database[key]));
-    }
+        /**
+         * Whether or not, the member is self-muted
+         */
+        this.selfMute = Boolean(data.self_mute);
 
-    /**
-     * Gets all keys.
-     * Returns an object.
-     * @returns {Promise&lt;Database>}
-     */
-    getAll() {
-        if (!this.database) return undefined;
-        return Promise.resolve(this._clone(this.database));
-    }
+        /**
+         * The nickname of the member, if any
+         * @type {?string}
+         */
+        this.nickname = data.nick || null;
 
-    /**
-     * Indicates whether a key with the specified key exists or not.
-     * Returns a boolean.
-     * @param {string|Array} key
-     * @param {string} [method='string']
-     * @returns {boolean}
-     */
-    has(key) {
-        if (this.database.hasOwnProperty(key)) {
-            return true;
-        } else if (!this.database.hasOwnProperty(key)) {
-            return false;
-        }
-    }
-
-    /**
-     * Sets a key with specified value.
-     * @param {string} key
-     * @param {string|number|boolean|object} value
-     */
-    set(key, value) {
-        this.database[key] = this._clone(value);
-        this.save();
-    }
-
-    /**
-     * @param {string} key
-     * @param {string} data
-     * @returns {boolean}
-     */
-    startsWith(key, data) {
-        if (data === undefined) return undefined;
-        return this.database[key].startsWith(data);
-    }
-
-    /**
-     * Subtracts a number from a value.
-     * @param {string} key
-     * @param {number} data
-     */
-    subtract(key, data) {
-        if (typeof data !== 'number') throw new Error('Data must be a number.');
-        let fetched = this._clone(this.database[key] - data);
-        this.database[key] = this._clone(fetched);
-        this.save();
-    }
-
-    /**
-     * Saves the database, synchronously.
-     * @param {string} path
-     */
-    save(path) {
-        if (!path) path = this.path;
-        fs.writeFileSync(path, JSON.stringify(this.database));
-    }
-
-    /**
-     * @param {object} data
-     * @private
-     */
-    _clone(data) {
-        if (data === undefined) return undefined;
-        return JSON.parse(JSON.stringify(data));
+        this.user = data.user;
+        this.roles = data.roles;
     }
 }
 
-module.exports = Database;</code></pre>
+module.exports = GuildMember;</code></pre>
         </article>
     </section>
 

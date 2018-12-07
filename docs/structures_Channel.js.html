@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>util/Database.js - Documentation</title>
+    <title>structures/Channel.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -33,7 +33,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">util/Database.js</h1>
+    <h1 class="page-title">structures/Channel.js</h1>
     
 
     
@@ -45,176 +45,66 @@
         <article>
             <pre class="prettyprint source linenums"><code>'use strict';
 
-const fs = require('fs');
-const path = require('path');
+const Constants = require('../util/Constants');
+const Endpoints = Constants.Endpoints;
 
-class Database {
-
-    /**
-     * @param {string} [name] Name of the database
-     * @param {DatabaseOptions} [options] Options for the database
-     */
-    constructor(name, options = {}) {
+/**
+ * Represents a channel on Discord
+ * @class
+ */
+class Channel {
+    constructor(client, data) {
 
         /**
-         * Name of the database
+         * @name Channel#client
+         * @type {Client}
+         * @readonly
+         */
+        Object.defineProperty(this, 'client', { value: client });
+
+        /**
+         * The type of the channel
          * @type {string}
          */
-        this.name = name;
+        this.type = Constants.ChannelTypes[data.type] ? Constants.ChannelTypes[data.type].toLowerCase() : 'unknown';
+
+        if (data) this._setup(data);
+    }
+
+    _setup(data) {
 
         /**
-         * Options for the database
-         * @type {DatabaseOptions}
+         * The ID of the channel
+         * @type {string}
          */
-        this.options = options;
-
-        var dbName;
-        if (this.name) {
-            if (this.name.includes('.json')) {
-                this.name = this.name.split('.json')[0];
-            } else if (!this.name.includes('.json')) {
-                dbName = `${this.name}.json`;
-            }
-        } else {
-            dbName = 'niscord.json';
-        }
-        if (!fs.existsSync(path.resolve(dbName))) fs.writeFileSync(path.resolve(dbName), '{ }');
-
-        this.path = path.resolve(dbName);
-        this.database = require(this.path);
+        this.id = data.id
     }
 
     /**
-     * Adds a number to a value.
-     * @param {string} key
-     * @param {number} data
+     * Deletes a channel
+     * @returns {Promise&lt;Channel>}
+     * @example
+     * Channel.delete()
+     *   .then((channel) => console.log(`Deleted: ${channel.id}`));
+     *   .catch(console.error);
      */
-    add(key, data) {
-        if (typeof data !== 'number' || data === undefined) throw new Error('Data must be a number.');
-        let fetched = this._clone(this.database[key] + data);
-        this.database[key] = this._clone(fetched);
-        this.save();
+    delete() {
+        return this.client.rest.request('delete', Endpoints.CHANNEL(this.id), {
+            auth: true
+        }).then(() => {
+            return this;
+        });
     }
 
     /**
-     * Deletes a specified key and its value.
-     * @param {string} key
+     * @returns {string}
      */
-    delete(key) {
-        if (!this.database[key]) return undefined;
-        delete this.database[key];
-        this.save();
-    }
-
-    /**
-     * Deletes all the keys.
-     * @returns {Promise&lt;Database>}
-     */
-    deleteAll() {
-        for (let key in this.database) {
-            this.delete(key);
-            this.save();
-        }
-        return Promise.resolve(this.database);
-    }
-
-    /**
-     * Edits a specified key's value.
-     * @param {string} key
-     * @param {string|boolean|object|number} value
-     */
-    edit(key, value) {
-        this.database[key] = this._clone(value);
-        this.save();
-    }
-
-    /**
-     * Gets a specified key with its value.
-     * @param {string} key
-     * @returns {Promise&lt;DatabaseKey>}
-     */
-    get(key) {
-        if (!this.database[key]) return undefined;
-        return Promise.resolve(this._clone(this.database[key]));
-    }
-
-    /**
-     * Gets all keys.
-     * Returns an object.
-     * @returns {Promise&lt;Database>}
-     */
-    getAll() {
-        if (!this.database) return undefined;
-        return Promise.resolve(this._clone(this.database));
-    }
-
-    /**
-     * Indicates whether a key with the specified key exists or not.
-     * Returns a boolean.
-     * @param {string|Array} key
-     * @param {string} [method='string']
-     * @returns {boolean}
-     */
-    has(key) {
-        if (this.database.hasOwnProperty(key)) {
-            return true;
-        } else if (!this.database.hasOwnProperty(key)) {
-            return false;
-        }
-    }
-
-    /**
-     * Sets a key with specified value.
-     * @param {string} key
-     * @param {string|number|boolean|object} value
-     */
-    set(key, value) {
-        this.database[key] = this._clone(value);
-        this.save();
-    }
-
-    /**
-     * @param {string} key
-     * @param {string} data
-     * @returns {boolean}
-     */
-    startsWith(key, data) {
-        if (data === undefined) return undefined;
-        return this.database[key].startsWith(data);
-    }
-
-    /**
-     * Subtracts a number from a value.
-     * @param {string} key
-     * @param {number} data
-     */
-    subtract(key, data) {
-        if (typeof data !== 'number') throw new Error('Data must be a number.');
-        let fetched = this._clone(this.database[key] - data);
-        this.database[key] = this._clone(fetched);
-        this.save();
-    }
-
-    /**
-     * Saves the database, synchronously.
-     * @param {string} path
-     */
-    save(path) {
-        if (!path) path = this.path;
-        fs.writeFileSync(path, JSON.stringify(this.database));
-    }
-
-    /**
-     * @param {object} data
-     * @private
-     */
-    _clone(data) {
-        if (data === undefined) return undefined;
-        return JSON.parse(JSON.stringify(data));
+    toString() {
+        return `&lt;#${this.id}>`;
     }
 }
 
-module.exports = Database;</code></pre>
+module.exports = Channel;</code></pre>
         </article>
     </section>
 
