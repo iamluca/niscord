@@ -1,7 +1,7 @@
 'use strict';
 
 const Constants = require('../util/Constants');
-const Endpoints = require('../util/Constants').Endpoints;
+const Endpoints = Constants.Endpoints;
 const User = require('./User');
 
 /**
@@ -12,21 +12,31 @@ const User = require('./User');
 class ClientUser extends User {
     constructor(client, data) {
         super(client, data);
+
+        /**
+         * @name ClientUser#client
+         * @type {Client}
+         * @readonly
+         */
         Object.defineProperty(this, 'client', {
             value: client
         });
+
         Object.defineProperty(this, 'since', {
             value: null,
             writable: true
         });
+
         Object.defineProperty(this, 'game', {
             value: null,
             writable: true
         });
+
         Object.defineProperty(this, 'status', {
             value: 'online',
             writable: true
         });
+
         Object.defineProperty(this, 'afk', {
             value: false,
             writable: true

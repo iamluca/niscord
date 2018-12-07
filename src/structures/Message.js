@@ -10,6 +10,7 @@ class Message {
     constructor(client, data) {
 
         /**
+         * @name Message#client
          * @type {Client}
          * @readonly
          */

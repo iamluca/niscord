@@ -1,7 +1,8 @@
 'use strict';
 
 const Collection = require('../util/Collection');
-const Endpoints = require('../util/Constants').Endpoints;
+const Constants = require('../util/Constants');
+const Endpoints = Constants.Endpoints;
 const Util = require('../util/Util');
 
 /**

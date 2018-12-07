@@ -6,9 +6,16 @@
  */
 class User {
     constructor(client, data) {
+
+        /**
+         * @name User#client
+         * @type {Client}
+         * @readonly
+         */
         Object.defineProperty(this, 'client', {
             value: client
         });
+
         if (data) return this._setup(data);
     }
 

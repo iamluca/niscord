@@ -1,10 +1,13 @@
 'use strict';
+
 const Collection = require('../util/Collection');
 const Constants = require('../util/Constants');
 const RequestManager = require('../rest/RequestManager');
 const WebSocketManager = require('../websocket/WebSocketManager');
 
 /**
+ * Represnets a client on Discord
+ * @class
  * @extends {WebSocketManager}
  */
 class Client extends WebSocketManager {

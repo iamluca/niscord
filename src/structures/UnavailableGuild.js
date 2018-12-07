@@ -2,6 +2,12 @@
 
 class UnavailableGuild {
     constructor(client, data) {
+
+        /**
+         * @name UnavailableGuild#client
+         * @type {Client}
+         * @readonly
+         */
         Object.defineProperty(this, 'client', {
             value: client
         });

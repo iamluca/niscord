@@ -2,6 +2,7 @@ const Constants = require('../util/Constants');
 const ClientUser = require('../structures/ClientUser');
 const EventEmitter = require('events').EventEmitter;
 const Guild = require('../structures/Guild');
+const GuildMember = require('../structures/GuildMember');
 const Message = require('../structures/Message');
 const UnavailableGuild = require('../structures/UnavailableGuild');
 const User = require('../structures/User');
@@ -77,6 +78,19 @@ class WebSocketManager extends EventEmitter {
                     this.emit(Constants.Events.READY);
                 }
                 this.emit(Constants.Events.GUILD_CREATE, guild);
+                break;
+            case 'GUILD_MEMBER_ADD':
+                if (!this._state) return;
+                const member = new GuildMember(this, packet.d);
+                member.guild.members.set(packet.d.user.id, member);
+                this.emit(Constants.Events.GUILD_MEMBER_ADD, member);
+                break;
+            case 'GUILD_MEMBER_REMOVE':
+                if (!this._state) return;
+                const currentGuild = this.guilds.get(packet.d.guild_id);
+                const member = currentGuild.members.get(packet.d.user.id);
+                currentGuild.members.delete(packet.d.user.id);
+                this.emit(Constants.Events.GUILD_MEMBER_REMOVE, member);
                 break;
         }
     }

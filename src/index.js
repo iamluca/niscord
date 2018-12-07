@@ -3,6 +3,7 @@
 module.exports = {
 
     // Structures
+    Channel: require('./structures/Channel'),
     Client: require('./structures/Client'),
     ClientUser: require('./structures/ClientUser'),
     Guild: require('./structures/Guild'),
