@@ -1,5 +1,8 @@
 'use strict';
 
+/**
+ * Represents a guild member on Discord
+ */
 class GuildMember {
     constructor(client, data) {
 

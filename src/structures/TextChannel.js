@@ -7,8 +7,7 @@ const Message = require('./Message');
 
 /**
  * Represents a text channel on Discord
- * @class
- * @extends GuildChannel
+ * @extends {GuildChannel}
  */
 class TextChannel extends GuildChannel {
     constructor(client, data) {
