@@ -7,8 +7,8 @@ class DiscordAPIError extends Error {
         this.code = code;
         if (stack) {
             this.stack = stack.replace(/\w*?Error/, `${this.name}: ${this.message}`);
-        };
+        }
     }
-};
+}
 
 module.exports = DiscordAPIError;

@@ -16,11 +16,6 @@ class User {
             value: client
         });
 
-        if (data) return this._setup(data);
-    }
-
-    _setup(data) {
-
         /**
          * The ID of the user
          * @type {string}

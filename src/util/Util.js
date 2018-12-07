@@ -1,6 +1,8 @@
 'use strict';
 
+const Channel = require('../structures/Channel');
 const Guild = require('../structures/Guild');
+const GuildMember = require('../structures/GuildMember');
 const Message = require('../structures/Message');
 const User = require('../structures/User');
 
@@ -25,14 +27,27 @@ class Util {
 
   /**
    * Resolves a User to a user ID.
-   * @param {User} user The user to identify
-   * @returns {string}
+   * @param {User} user The user to resolve
+   * @returns {?Snowflake}
    */
   static resolveUserID(user) {
     if (user instanceof User || user instanceof GuildMember) return user.id;
     if (typeof user === 'string') return user || null;
     if (user instanceof Message) return user.author.id;
     if (user instanceof Guild) return user.ownerID;
+    return null;
+  }
+
+  /**
+   * Resolves a Channel to a channel ID.
+   * @param {Channel} channel The channel to resolve
+   * @returns {?Snowflake}
+   */
+  static resolveChannelID(channel) {
+    if (channel instanceof Channel) return channel.id;
+    if (typeof channel === 'string') return channel;
+    if (channel instanceof Message) return channel.channel.id;
+    if (channel instanceof Guild) return channel.defaultChannel.id;
     return null;
   }
 

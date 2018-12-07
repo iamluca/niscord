@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>structures/User.js - Documentation</title>
+    <title>structures/GuildChannel.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -33,7 +33,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">structures/User.js</h1>
+    <h1 class="page-title">structures/GuildChannel.js</h1>
     
 
     
@@ -43,69 +43,153 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>'use strict';
+            <pre class="prettyprint source linenums"><code>const Channel = require('./Channel');
+const Constants = require('../util/Constants');
+const Endpoints = Constants.Endpoints;
+const Util = require('../util/Util');
 
 /**
- * Represents a user on Discord
- * @class
+ * Represents a guild channel
+ * @extends Channel
  */
-class User {
-    constructor(client, data) {
+class GuildChannel extends Channel {
+    constructor(guild, data) {
+        super(guild.client, data);
 
         /**
-         * @name User#client
-         * @type {Client}
-         * @readonly
+         * @name GuildChannel#guild
+         * @type {Guild}
+         * @readyonly
          */
-        Object.defineProperty(this, 'client', {
-            value: client
-        });
-
-        if (data) return this.setup(data);
+        Object.defineProperty(this, 'guild', { value: data.guild });
     }
 
     setup(data) {
+        super.setup(data);
 
         /**
-         * The ID of the user
+         * The name of the guild channel
          * @type {string}
          */
-        this.id = data.id;
+        this.name = data.name;
 
         /**
-         * The username of the user
+         * The position of the guild channel
+         * @type {number}
+         */
+        this.position = data.position;
+
+        /**
+         * The ID of the parent of the guild channel
          * @type {string}
          */
-        this.username = data.username;
-
-        /**
-         * The discriminator of the user
-         * @type {string}
-         */
-        this.discriminator = data.discriminator;
-
-        /**
-         * The avatar's ID of the user
-         * @type {string}
-         */
-        this.avatar = data.avatar;
-
-        /**
-         * Whether or not, the user is a bot
-         * @type {boolean}
-         */
-        this.bot = Boolean(data.bot);
+        this.parentID = data.parentID;
     }
 
     /**
-     * @returns {string}
+     * @type {?CategoryChannel}
+     * @readonly
      */
-    toString() {
-        return `&lt;@${this.id}>`;
+    get parent() {
+        return this.guild.channels.get(this.parentID) || null;
     }
-}
 
-module.exports = User;</code></pre>
+    /**
+     * Edits the guild channel
+     * @param {Object} data The new data for the channel
+     * @param {string} [reason] The reason for editing the guild channel
+     * @returns {Promise&lt;GuildChannel>}
+     * @example
+     * GuildChannel.edit({ name: 'niscord' })
+     *   .then(console.log)
+     *   .catch(console.error);
+     */
+    edit(data, reason) {
+        const _data = {};
+        _data.name = (data.name || this.name).trim();
+        _data.topic = typeof data.topic === 'undefined' ? this.topic : data.topic;
+        _data.nsfw = typeof data.nsfw === 'undefined' ? this.nsfw : data.nsfw;
+        _data.position = data.position || this.position;
+        _data.bitrate = data.bitrate || (this.bitrate ? this.bitrate * 1000 : undefined);
+        _data.user_limit = typeof data.userLimit !== 'undefined' ? data.userLimit : this.userLimit;
+        _data.parent_id = data.parent;
+        _data.permission_overwrites = data.permissionOverwrites;
+        return this.client.rest.request('patch', Endpoints.CHANNEL(this.id), {
+            auth: true,
+            data: _data,
+            reason: reason
+        }).then(() => {
+            return this;
+        });
+    }
+
+    /**
+     * Sets a new name for the guild channel
+     * @param {string} name The new name for the guild channel
+     * @param {string} [reason] The reason for editing the guild channel
+     * @returns {Promise&lt;GuildChannel>}
+     * @example
+     * GuildChannel.setName('niscord')
+     *   .then(console.log)
+     *   .catch(console.error);
+     */
+    setName(name, reason) {
+        return this.edit({ name }, reason);
+    }
+
+    /**
+     * Sets a new parent for the guild channel
+     * @param {CategoryChannel|string} parent The new parent for the guild channel
+     * @param {string} [reason] The reason for editing parent of the guild channel
+     * @returns {Promise&lt;GuildChannel>}
+     * @example
+     * GuildChannel.setParent('1234567890')
+     *   .then(console.log)
+     *   .catch(console.error);
+     */
+    setParent(parent, reason) {
+        parent = Util.resolveChannelID(parent);
+        return this.edit({ parent }, reason);
+    }
+
+    /**
+     * Sets a new topic for the guild channel
+     * @param {string} topic The new topic for the guild channel
+     * @param {*} [reason] The reason for editing the topic of the guild channel
+     * @returns {Promise&lt;GuildChannel>}
+     * @example
+     * GuildChannel.setTopic('Niscord')
+     *   .then(console.log)
+     *   .catch(console.error);
+     */
+    setTopic(topic, reason) {
+        return this.edit({ topic }, reason);
+    }
+
+    /**
+     * Deletes the guild channel
+     * @param {string} [reason] The reason for deleting the guild channel
+     * @returns {Promise&lt;GuildChannel>}
+     * @example
+     * GuildChannel.delete()
+     *   .then(console.log)
+     *   .catch(console.error);
+     */
+    delete(reason) {
+        return this.client.rest.request('delete', Endpoints.CHANNEL(this), {
+            auth: true,
+            reason: reason || null
+        }).then(() => {
+            return this;
+        });
+    }
+
+    toString() {
+        return `&lt;#${this.id}>`;
+    }
+};
+
+module.exports = GuildChannel;</code></pre>
         </article>
     </section>
 

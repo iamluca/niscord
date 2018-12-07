@@ -3,6 +3,7 @@
 const Collection = require('../util/Collection');
 const Constants = require('../util/Constants');
 const Endpoints = Constants.Endpoints;
+const TextChannel = require('./TextChannel');
 const Util = require('../util/Util');
 
 /**
@@ -37,10 +38,34 @@ class Guild {
          */
         this.roles = new Collection();
 
-        if (data) this._setup(data);
+        for (var channel of data.channels) {
+            if (channel.type === 0) {
+                this.client.channels.set(channel.id, new TextChannel(this.client, channel));
+
+                channel.guild = this;
+                this.channels.set(channel.id, new TextChannel(this.client, channel));
+            }
+            /**
+            if (channel.type === 2) {
+                this.client.channels.set(channel.id, new VoiceChannel(this.client, channel));
+
+                channel.guild = this;
+                this.channels.set(channel.id, new VoiceChannel(this.client, channel));
+            }
+
+            if (channel.type === 4) {
+                this.client.channels.set(channel.id, new CategoryChannel(this.client, channel));
+
+                channel.guild = this;
+                this.channels.set(channel.id, new CategoryChannel(this.client, channel));
+            }
+            */
+        }
+
+        if (data) this.setup(data);
     }
 
-    _setup(data) {
+    setup(data) {
 
         /**
          * The name of the guild

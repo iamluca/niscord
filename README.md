@@ -37,7 +37,7 @@ const Niscord = require('niscord');
 const client = new Niscord.Client();
 
 client.on('ready', () => {
-  console.log(`Logged in as ${client.user.username}#${client.user.discriminator}.`);
+  console.log(`Logged in as ${client.user.username}.`);
 });
 
 client.login('Client token');

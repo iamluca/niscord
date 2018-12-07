@@ -18,21 +18,16 @@ class Channel {
         Object.defineProperty(this, 'client', { value: client });
 
         /**
+         * The ID of the channel
+         * @type {string}
+         */
+        this.id = data.id;
+
+        /**
          * The type of the channel
          * @type {string}
          */
         this.type = Constants.ChannelTypes[data.type] ? Constants.ChannelTypes[data.type].toLowerCase() : 'unknown';
-
-        if (data) this._setup(data);
-    }
-
-    _setup(data) {
-
-        /**
-         * The ID of the channel
-         * @type {string}
-         */
-        this.id = data.id
     }
 
     /**

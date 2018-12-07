@@ -1,9 +1,7 @@
 'use strict';
 
-const Constants = require('../util/Constants');
-
 class GuildMember {
-    constructor(guild, data) {
+    constructor(client, data) {
 
         /**
          * Client
@@ -13,23 +11,11 @@ class GuildMember {
          */
         Object.defineProperty(this, 'client', { value: client });
 
-        /**
-         * @name GuildMember#guild
-         * @type {Guild}
-         */
-        Object.defineProperty(this, 'guild', { value: data.guild });
-
-
-        /**
-         * The guild of the member
-         * @type {Guild}
-         */
-        this.guild = guild;
-
-        if (data) this._setup(data);
-    }
-
-    _setup(data) {
+        Object.defineProperty(this, 'guild', {
+            get() {
+                return data.guild || this.client.guilds.get(data.guild_id);
+            }
+        });
 
         /**
          * Whether or not, the member is deafened

@@ -18,15 +18,8 @@ class Message {
             value: client
         });
 
-        if (data) this._setup(data);
-    }
+        Object.defineProperty(this, 'data', { value: data });
 
-    _setup(data) {
-
-        /**
-         * The channel, this message was sent in.
-         * @type {TextChannel|DMChannel|GroupDMChannel}
-         */
         this.channel = this.client.channels.get(data.channel_id);
 
         /**
@@ -78,11 +71,11 @@ class Message {
     }
 
     get guild() {
-        return this.channel.guild || null;
+        return this.channel.guild ? this.channel.guild : this.client.guilds.get(this.data.guild_id) || null;
     }
 
     get member() {
-        return this.guild ? this.guild.members.get(this.author.id) || null : null;
+        return this.guild ? this.guild.members.get(this.data.author.id) : null;
     }
 
     /**

@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>structures/User.js - Documentation</title>
+    <title>structures/TextChannel.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -33,7 +33,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">structures/User.js</h1>
+    <h1 class="page-title">structures/TextChannel.js</h1>
     
 
     
@@ -45,67 +45,87 @@
         <article>
             <pre class="prettyprint source linenums"><code>'use strict';
 
+const Constants = require('../util/Constants');
+const Endpoints = Constants.Endpoints;
+const GuildChannel = require('./GuildChannel');
+const Message = require('./Message');
+
 /**
- * Represents a user on Discord
+ * Represents a text channel on Discord
  * @class
+ * @extends GuildChannel
  */
-class User {
+class TextChannel extends GuildChannel {
     constructor(client, data) {
-
-        /**
-         * @name User#client
-         * @type {Client}
-         * @readonly
-         */
-        Object.defineProperty(this, 'client', {
-            value: client
-        });
-
-        if (data) return this.setup(data);
+        super(client, data);
+        Object.defineProperty(this, 'client', { value: client });
     }
 
     setup(data) {
+        super.setup(data);
 
         /**
-         * The ID of the user
-         * @type {string}
+         * The topic of the text channel
+         * @type {?string}
          */
-        this.id = data.id;
+        this.topic = data.topic;
 
         /**
-         * The username of the user
-         * @type {string}
-         */
-        this.username = data.username;
-
-        /**
-         * The discriminator of the user
-         * @type {string}
-         */
-        this.discriminator = data.discriminator;
-
-        /**
-         * The avatar's ID of the user
-         * @type {string}
-         */
-        this.avatar = data.avatar;
-
-        /**
-         * Whether or not, the user is a bot
+         * Whether or not, the text channel is NSFW
          * @type {boolean}
          */
-        this.bot = Boolean(data.bot);
+        this.nsfw = Boolean(data.nsfw);
+
+        /**
+         * The ID of the message which was last sent in the text channel, if any
+         * @type {string}
+         */
+        this.lastMessageID = data.last_message_id;
+
+        /**
+         * The timestamp when the a message was pinned, if any
+         * @type {?number}
+         */
+        this.lastPinTimestamp = data.last_pin_timestamp ? new Date(data.last_pin_timestamp).getTime() : null;
     }
 
     /**
-     * @returns {string}
+     * Sends a message in the text channel
+     * @param {string|Object} content The content of the message
+     * @param {Object} options Options for the message
+     * @returns {Promise&lt;Message>}
      */
-    toString() {
-        return `&lt;@${this.id}>`;
-    }
-}
+    sendMessage(content, options) {
+        if (typeof content === 'object' &amp;&amp; !options) {
+            options = content;
+            content = null;
+        } else if (!options) {
+            options = {};
+        }
 
-module.exports = User;</code></pre>
+        return this.client.rest.request('post', Endpoints.CHANNEL_MESSAGES(this.id), {
+            auth: true,
+            data: {
+                content: content,
+                embed: options.embed
+            }
+        }).then((response) => {
+            return new Message(this.client, response.data);
+        });
+    }
+
+    /**
+     * Sends a message to the text channel
+     * @param {String|Object} content The content of the message
+     * @param {Object} options Options for the message.
+     * @returns {Promise&lt;Message>}
+     */
+    send(content, options) {
+        return this.sendMessage(content, options);
+    }
+};
+
+module.exports = TextChannel;</code></pre>
         </article>
     </section>
 
