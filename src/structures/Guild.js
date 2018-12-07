@@ -8,7 +8,6 @@ const Util = require('../util/Util');
 
 /**
  * Represents a guild on Discord
- * @class
  */
 class Guild {
     constructor(client, data) {

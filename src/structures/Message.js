@@ -4,7 +4,6 @@ const Endpoints = require('../util/Constants').Endpoints;
 
 /**
  * Represents a message on Discord
- * @class
  */
 class Message {
     constructor(client, data) {

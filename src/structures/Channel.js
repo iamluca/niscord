@@ -5,7 +5,6 @@ const Endpoints = Constants.Endpoints;
 
 /**
  * Represents a channel on Discord
- * @class
  */
 class Channel {
     constructor(client, data) {

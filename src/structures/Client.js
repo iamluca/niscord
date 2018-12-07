@@ -7,7 +7,6 @@ const WebSocketManager = require('../websocket/WebSocketManager');
 
 /**
  * Represnets a client on Discord
- * @class
  * @extends {WebSocketManager}
  */
 class Client extends WebSocketManager {

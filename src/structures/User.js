@@ -2,7 +2,6 @@
 
 /**
  * Represents a user on Discord
- * @class
  */
 class User {
     constructor(client, data) {
