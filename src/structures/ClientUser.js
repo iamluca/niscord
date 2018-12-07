@@ -77,7 +77,9 @@ class ClientUser extends User {
     /**
      *
      * @param {Object} [options] Options for the presence
-     * @returns {*}
+     * @returns {ClientUser}
+     * @example
+     * Client.user.setPresence({ game: { name: 'Niscord', type: 0 }, status: 'online' });
      */
     setPresence(options = {}) {
         const status = ['online', 'idle', 'dnd', 'offline'];
@@ -85,7 +87,7 @@ class ClientUser extends User {
         this.since = options.since || null;
         this.game = options.game || null;
         this.afk = options.afk || false;
-        this.client.send({
+        return this.client.send({
             op: Constants.WebSocket.OPCODES.STATUS_UPDATE,
             d: {
                 since: this.since,

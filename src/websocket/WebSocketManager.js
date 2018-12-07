@@ -88,9 +88,9 @@ class WebSocketManager extends EventEmitter {
             case 'GUILD_MEMBER_REMOVE':
                 if (!this._state) return;
                 const currentGuild = this.guilds.get(packet.d.guild_id);
-                const member = currentGuild.members.get(packet.d.user.id);
+                const resolvedMember = currentGuild.members.get(packet.d.user.id);
                 currentGuild.members.delete(packet.d.user.id);
-                this.emit(Constants.Events.GUILD_MEMBER_REMOVE, member);
+                this.emit(Constants.Events.GUILD_MEMBER_REMOVE, resolvedMember);
                 break;
         }
     }
