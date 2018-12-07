@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>structures/User.js - Documentation</title>
+    <title>structures/Channel.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -33,7 +33,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">structures/User.js</h1>
+    <h1 class="page-title">structures/Channel.js</h1>
     
 
     
@@ -45,67 +45,66 @@
         <article>
             <pre class="prettyprint source linenums"><code>'use strict';
 
+const Constants = require('../util/Constants');
+const Endpoints = Constants.Endpoints;
+
 /**
- * Represents a user on Discord
+ * Represents a channel on Discord
  * @class
  */
-class User {
+class Channel {
     constructor(client, data) {
 
         /**
-         * @name User#client
+         * @name Channel#client
          * @type {Client}
          * @readonly
          */
-        Object.defineProperty(this, 'client', {
-            value: client
-        });
+        Object.defineProperty(this, 'client', { value: client });
 
-        if (data) return this._setup(data);
+        /**
+         * The type of the channel
+         * @type {string}
+         */
+        this.type = Constants.ChannelTypes[data.type] ? Constants.ChannelTypes[data.type].toLowerCase() : 'unknown';
+
+        if (data) this._setup(data);
     }
 
     _setup(data) {
 
         /**
-         * The ID of the user
+         * The ID of the channel
          * @type {string}
          */
-        this.id = data.id;
+        this.id = data.id
+    }
 
-        /**
-         * The username of the user
-         * @type {string}
-         */
-        this.username = data.username;
-
-        /**
-         * The discriminator of the user
-         * @type {string}
-         */
-        this.discriminator = data.discriminator;
-
-        /**
-         * The avatar's ID of the user
-         * @type {string}
-         */
-        this.avatar = data.avatar;
-
-        /**
-         * Whether or not, the user is a bot
-         * @type {boolean}
-         */
-        this.bot = Boolean(data.bot);
+    /**
+     * Deletes a channel
+     * @returns {Promise&lt;Channel>}
+     * @example
+     * Channel.delete()
+     *   .then((channel) => console.log(`Deleted: ${channel.id}`));
+     *   .catch(console.error);
+     */
+    delete() {
+        return this.client.rest.request('delete', Endpoints.CHANNEL(this.id), {
+            auth: true
+        }).then(() => {
+            return this;
+        });
     }
 
     /**
      * @returns {string}
      */
     toString() {
-        return `&lt;@${this.id}>`;
+        return `&lt;#${this.id}>`;
     }
 }
 
-module.exports = User;</code></pre>
+module.exports = Channel;</code></pre>
         </article>
     </section>
 

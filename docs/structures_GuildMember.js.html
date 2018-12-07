@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>structures/User.js - Documentation</title>
+    <title>structures/GuildMember.js - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -33,7 +33,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">structures/User.js</h1>
+    <h1 class="page-title">structures/GuildMember.js</h1>
     
 
     
@@ -45,67 +45,72 @@
         <article>
             <pre class="prettyprint source linenums"><code>'use strict';
 
-/**
- * Represents a user on Discord
- * @class
- */
-class User {
-    constructor(client, data) {
+const Constants = require('../util/Constants');
+
+class GuildMember {
+    constructor(guild, data) {
 
         /**
-         * @name User#client
+         * Client
+         * @name GuildMember#client
          * @type {Client}
          * @readonly
          */
-        Object.defineProperty(this, 'client', {
-            value: client
-        });
+        Object.defineProperty(this, 'client', { value: client });
 
-        if (data) return this._setup(data);
+        /**
+         * @name GuildMember#guild
+         * @type {Guild}
+         */
+        Object.defineProperty(this, 'guild', { value: data.guild });
+
+
+        /**
+         * The guild of the member
+         * @type {Guild}
+         */
+        this.guild = guild;
+
+        if (data) this._setup(data);
     }
 
     _setup(data) {
 
         /**
-         * The ID of the user
-         * @type {string}
-         */
-        this.id = data.id;
-
-        /**
-         * The username of the user
-         * @type {string}
-         */
-        this.username = data.username;
-
-        /**
-         * The discriminator of the user
-         * @type {string}
-         */
-        this.discriminator = data.discriminator;
-
-        /**
-         * The avatar's ID of the user
-         * @type {string}
-         */
-        this.avatar = data.avatar;
-
-        /**
-         * Whether or not, the user is a bot
+         * Whether or not, the member is deafened
          * @type {boolean}
          */
-        this.bot = Boolean(data.bot);
-    }
+        this.deaf = Boolean(data.deaf);
 
-    /**
-     * @returns {string}
-     */
-    toString() {
-        return `&lt;@${this.id}>`;
+        /**
+         * Whether or not, the member is mute
+         * @type {boolean}
+         */
+        this.mute = Boolean(data.mute);
+
+        /**
+         * Whether or not, the member is self-deafened
+         * @type {boolean}
+         */
+        this.selfDeaf = Boolean(data.self_deaf);
+
+        /**
+         * Whether or not, the member is self-muted
+         */
+        this.selfMute = Boolean(data.self_mute);
+
+        /**
+         * The nickname of the member, if any
+         * @type {?string}
+         */
+        this.nickname = data.nick || null;
+
+        this.user = data.user;
+        this.roles = data.roles;
     }
 }
 
-module.exports = User;</code></pre>
+module.exports = GuildMember;</code></pre>
         </article>
     </section>
 
