@@ -3,6 +3,7 @@
 const Collection = require('../util/Collection');
 const Constants = require('../util/Constants');
 const Endpoints = Constants.Endpoints;
+const GuildMember = require('./GuildMember');
 const TextChannel = require('./TextChannel');
 const User = require('../structures/User');
 const Util = require('../util/Util');
