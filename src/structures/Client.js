@@ -10,7 +10,6 @@ const WebSocketManager = require('../websocket/WebSocketManager');
  * @extends {WebSocketManager}
  */
 class Client extends WebSocketManager {
-
     /**
      * @constructor
      * @param {ClientOptions} [options] Options for the client
@@ -52,10 +51,21 @@ class Client extends WebSocketManager {
          * @type {Collection}
          */
         this.channels = new Collection();
+
+        /**
+         * The user, the client is currently logged in as
+         * @type {?ClientUser}
+         */
+        this.user = null;
+
+        /**
+         * @type {?Date}
+         */
+        this.readyAt = null;
     }
 
     /**
-     * How long it has been since the client last entered the `READY` state in milliseconds
+     * The time, since the client was stated as in `READY` state
      * @type {?number}
      * @readonly
      */

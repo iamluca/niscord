@@ -52,7 +52,7 @@ class User {
      * @readonly
      */
     get tag() {
-        return this.tag = `${this.username}#${this.discriminator}`;
+        return `${this.username}#${this.discriminator}`;
     }
 
     /**

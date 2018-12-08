@@ -50,14 +50,13 @@ class GuildChannel extends Channel {
     /**
      * Edits the guild channel
      * @param {Object} data The new data for the channel
-     * @param {string} [reason] The reason for editing the guild channel
      * @returns {Promise<GuildChannel>}
      * @example
      * GuildChannel.edit({ name: 'niscord' })
      *   .then(console.log)
      *   .catch(console.error);
      */
-    edit(data, reason) {
+    edit(data) {
         const _data = {};
         _data.name = (data.name || this.name).trim();
         _data.topic = typeof data.topic === 'undefined' ? this.topic : data.topic;
@@ -69,8 +68,7 @@ class GuildChannel extends Channel {
         _data.permission_overwrites = data.permissionOverwrites;
         return this.client.rest.request('patch', Endpoints.CHANNEL(this.id), {
             auth: true,
-            data: _data,
-            reason: reason
+            data: _data
         }).then(() => {
             return this;
         });
@@ -79,44 +77,41 @@ class GuildChannel extends Channel {
     /**
      * Sets a new name for the guild channel
      * @param {string} name The new name for the guild channel
-     * @param {string} [reason] The reason for editing the guild channel
      * @returns {Promise<GuildChannel>}
      * @example
      * GuildChannel.setName('niscord')
      *   .then(console.log)
      *   .catch(console.error);
      */
-    setName(name, reason) {
-        return this.edit({ name }, reason);
+    setName(name) {
+        return this.edit({ name });
     }
 
     /**
      * Sets a new parent for the guild channel
      * @param {CategoryChannel|string} parent The new parent for the guild channel
-     * @param {string} [reason] The reason for editing parent of the guild channel
      * @returns {Promise<GuildChannel>}
      * @example
      * GuildChannel.setParent('1234567890')
      *   .then(console.log)
      *   .catch(console.error);
      */
-    setParent(parent, reason) {
+    setParent(parent) {
         parent = Util.resolveChannelID(parent);
-        return this.edit({ parent }, reason);
+        return this.edit({ parent });
     }
 
     /**
      * Sets a new topic for the guild channel
      * @param {string} topic The new topic for the guild channel
-     * @param {*} [reason] The reason for editing the topic of the guild channel
      * @returns {Promise<GuildChannel>}
      * @example
      * GuildChannel.setTopic('Niscord')
      *   .then(console.log)
      *   .catch(console.error);
      */
-    setTopic(topic, reason) {
-        return this.edit({ topic }, reason);
+    setTopic(topic) {
+        return this.edit({ topic });
     }
 
     /**

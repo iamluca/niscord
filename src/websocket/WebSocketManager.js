@@ -15,9 +15,10 @@ const WebSocket = require('ws');
 class WebSocketManager extends EventEmitter {
     constructor() {
         super();
-        this.socket = new WebSocket(`${Constants.WebSocket.GATEWAY.URL}/?v=${Constants.WebSocket.GATEWAY.VERSION}&encoding=${Constants.WebSocket.GATEWAY.ENCODING}`);
+        this.ws = new WebSocket(`${Constants.WebSocket.GATEWAY.URL}/?v=${Constants.WebSocket.GATEWAY.VERSION}&encoding=${Constants.WebSocket.GATEWAY.ENCODING}`);
         this.state = null;
         this.session_id = null;
+        this.readyAt = null;
     }
 
     connect() {
@@ -25,7 +26,7 @@ class WebSocketManager extends EventEmitter {
     }
 
     onMessage() {
-        this.socket.addEventListener(Events.MESSAGE_CREATE, (event) => {
+        this.ws.addEventListener(Events.MESSAGE_CREATE, (event) => {
             const packet = JSON.parse(event.data);
             switch (packet.op) {
                 case Constants.WebSocket.OPCODES.DISPATCH:
@@ -133,7 +134,7 @@ class WebSocketManager extends EventEmitter {
                             seq: this.seq
                         }
                     });
-                } catch (e) {
+                } catch (err) {
                     this.ws.close(1000);
                     this.emit('debug', 'Failed to resume connection... Stopped resuming the connection.');
                     process.exit(1);
@@ -143,7 +144,7 @@ class WebSocketManager extends EventEmitter {
     }
 
     send(data) {
-        return this.socket.send(typeof data === 'object' ? JSON.stringify(data) : data);
+        return this.ws.send(typeof data === 'object' ? JSON.stringify(data) : data);
     }
 }
 
