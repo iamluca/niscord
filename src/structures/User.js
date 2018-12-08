@@ -46,6 +46,10 @@ class User {
         this.bot = Boolean(data.bot);
     }
 
+    get tag() {
+        return this.tag = `${this.username}#${this.discriminator}`;
+    }
+
     /**
      * @returns {string}
      */

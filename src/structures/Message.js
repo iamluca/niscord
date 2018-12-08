@@ -21,6 +21,10 @@ class Message {
             value: data
         });
 
+        /**
+         * The type of the channel, the message was sent in.
+         * @type {CategoryChannel|DMChannel|GroupDMChannel|TextChannel|VoiceChannel}
+         */
         this.channel = this.client.channels.get(data.channel_id);
 
         /**
@@ -106,6 +110,20 @@ class Message {
         }).then(() => {
             return this;
         });
+    }
+
+    /**
+     * Sends a message in message's channel, tagging author
+     * @param {string} content
+     * @returns {Promise<Message>}
+     * @example
+     * Message.reply('Niscord')
+     *   .then(console.log)
+     *   .catch(console.error);
+     */
+    reply(content) {
+        const finalProd = [`<@${this.author.id}>`, content].join(", ");
+        return this.channel.send(`${finalProd}`);
     }
 
     /**
