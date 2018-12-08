@@ -122,7 +122,7 @@ class Message {
      *   .catch(console.error);
      */
     reply(content) {
-        const finalProd = [`<@${this.author.id}>`, content].join(", ");
+        const finalProd = [`<@${this.author.id}>`, content].join(', ');
         return this.channel.send(`${finalProd}`);
     }
 
