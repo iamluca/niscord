@@ -1,6 +1,6 @@
 {
   "name": "niscord",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Niscord is a powerful JavaScript library for Discord API.",
   "main": "./src/index.js",
   "scripts": {
