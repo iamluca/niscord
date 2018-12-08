@@ -34,7 +34,7 @@ class Channel {
      * @returns {Promise<Channel>}
      * @example
      * Channel.delete()
-     *   .then((channel) => console.log(`Deleted: ${channel.id}`));
+     *   .then(console.log);
      *   .catch(console.error);
      */
     delete() {

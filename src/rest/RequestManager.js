@@ -16,10 +16,8 @@ class RequestManager {
 
     getAuth() {
         const token = this.client.token;
-        if (token) {
-            return `${this.tokenPrefix} ${token}`;
-        }
-        this.client.emit('error', new Error('Invalid client token.'));
+        if (!token) this.client.emit('error', new Error('Invalid client token.'));
+        return `${this.tokenPrefix} ${token}`;
     }
 
     async request(method, url, options = {}) {

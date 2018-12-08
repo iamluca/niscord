@@ -4,6 +4,7 @@ const Collection = require('../util/Collection');
 const Constants = require('../util/Constants');
 const Endpoints = Constants.Endpoints;
 const TextChannel = require('./TextChannel');
+const User = require('../structures/User');
 const Util = require('../util/Util');
 
 /**
@@ -59,6 +60,13 @@ class Guild {
                 this.channels.set(channel.id, new CategoryChannel(this.client, channel));
             }
             */
+        }
+
+        for (let member of data.members) {
+            this.client.users.set(member.user.id, new User(this.client, member.user));
+
+            member.guild = this;
+            this.members.set(member.user.id, new GuildMember(this.client, member));
         }
 
         if (data) this.setup(data);
