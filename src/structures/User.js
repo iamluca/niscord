@@ -34,7 +34,7 @@ class User {
         this.discriminator = data.discriminator;
 
         /**
-         * The avatar's ID of the user
+         * The ID of the avatar of the user
          * @type {string}
          */
         this.avatar = data.avatar;
@@ -46,6 +46,11 @@ class User {
         this.bot = Boolean(data.bot);
     }
 
+    /**
+     * The tag of the user
+     * @returns {string}
+     * @readonly
+     */
     get tag() {
         return this.tag = `${this.username}#${this.discriminator}`;
     }

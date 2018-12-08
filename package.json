@@ -1,28 +1,39 @@
 {
   "name": "niscord",
   "version": "0.0.4",
-  "description": "Niscord is a powerful, easy-to-use JavaScript library for Discord API.",
+  "description": "Niscord is a powerful JavaScript library for Discord API.",
   "main": "./src/index.js",
   "scripts": {
     "test": "echo 'Hello'",
-    "docs": "jsdoc -c .jsdoc.json"
+    "docs": "jsdoc -c .jsdoc.json",
+    "lint": "eslint src",
+    "lint:fix": "eslint --fix src"
   },
+  "author": "niscord",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/niscord/niscord.git"
   },
-  "author": "niscord",
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/niscord/niscord/issues"
   },
   "homepage": "https://niscord.js.org",
-  "devDependencies": {
-    "eslint": "^5.9.0",
-    "jsdoc": "^3.5.5"
+  "engines": {
+    "node": ">=4.0.0"
   },
   "dependencies": {
     "axios": "^0.18.0",
     "ws": "^6.1.2"
-  }
+  },
+  "devDependencies": {
+    "eslint": "^5.10.0",
+    "jsdoc": "^3.5.5"
+  },
+  "keywords": [
+    "discord",
+    "api",
+    "bot",
+    "nodejs"
+  ]
 }

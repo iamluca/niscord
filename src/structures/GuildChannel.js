@@ -1,3 +1,5 @@
+'use strict';
+
 const Channel = require('./Channel');
 const Constants = require('../util/Constants');
 const Endpoints = Constants.Endpoints;

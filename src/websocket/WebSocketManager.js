@@ -1,3 +1,5 @@
+'use strict';
+
 const Constants = require('../util/Constants');
 const ClientUser = require('../structures/ClientUser');
 const EventEmitter = require('events').EventEmitter;
