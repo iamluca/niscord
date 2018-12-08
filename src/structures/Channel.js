@@ -27,6 +27,12 @@ class Channel {
          * @type {string}
          */
         this.type = Constants.ChannelTypes[data.type];
+
+        /**
+         * The name of the channel
+         * @type {string}
+         */
+        this.name = data.name;
     }
 
     /**
