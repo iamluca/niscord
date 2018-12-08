@@ -65,12 +65,21 @@ class WebSocketManager extends EventEmitter {
                 }
                 this.emit(Events.GUILD_CREATE, resolvedGuild);
                 break;
+            
+            case 'GUILD_DELETE':
+                this.emit(Events.GUILD_DELETE, packet.d);
+                break;
 
             case 'MESSAGE_CREATE':
                 if (!this.state) return;
                 packet.d = new Message(this, packet.d);
                 if (!this.users.has(packet.d.author.id)) this.users.set(packet.d.user.id, new User(this.client, packet.d));
                 this.emit(Events.MESSAGE_CREATE, packet.d);
+                break;
+
+            case 'MESSAGE_DELETE':
+                if (!this.state) return;
+                this.emit(Events.MESSAGE_DELETE, packet.d);
                 break;
 
             case 'GUILD_MEMBER_ADD':
@@ -94,6 +103,11 @@ class WebSocketManager extends EventEmitter {
                     this.channels.set(packet.d.id, new TextChannel(this, packet.d));
                 }
                 this.emit(Events.CHANNEL_CREATE, packet.d);
+                break;
+            
+            case 'CHANNEL_DELETE':
+                if (!this.state) return;
+                this.emit(Events.CHANNEL_DELETE, packet.d);
                 break;
         }
     }
