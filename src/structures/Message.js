@@ -23,7 +23,7 @@ class Message {
 
         /**
          * The type of the channel, the message was sent in.
-         * @type {CategoryChannel|DMChannel|GroupDMChannel|TextChannel|VoiceChannel}
+         * @type {DMChannel|GroupDMChannel|TextChannel}
          */
         this.channel = this.client.channels.get(data.channel_id);
 
