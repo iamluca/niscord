@@ -26,7 +26,7 @@ class Channel {
          * The type of the channel
          * @type {string}
          */
-        this.type = Constants.ChannelTypes[data.type] ? Constants.ChannelTypes[data.type].toLowerCase() : 'unknown';
+        this.type = Constants.ChannelTypes[data.type];
     }
 
     /**

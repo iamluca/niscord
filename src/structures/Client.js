@@ -55,6 +55,15 @@ class Client extends WebSocketManager {
     }
 
     /**
+     * How long it has been since the client last entered the `READY` state in milliseconds
+     * @type {?number}
+     * @readonly
+     */
+    get uptime() {
+        return this.readyAt ? Date.now() - this.readyAt : null;
+    }
+
+    /**
      * Logs in with the client, forms a connection with the websocket.
      * @param {string} token Discord client token
      */

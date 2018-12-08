@@ -34,16 +34,9 @@ class ClientUser extends User {
     }
 
     edit(data) {
-        const _data = {};
-        _data.username = data.username || this.client.user;
-        if (!this.client.user.bot) {
-            _data.email = data.email || this.client.user.email;
-            _data.password = data.password;
-            if (data.new_password) _data.new_password = data.newPassword;
-        }
         return this.client.rest.request('patch', Endpoints.USER('@me'), {
             auth: true,
-            data: _data
+            data: data
         }).then(() => {
             return this;
         });
@@ -57,7 +50,7 @@ class ClientUser extends User {
      * @example
      * // Sets the username of the client user
      * Client.user.setUsername('niscord');
-     *   .then((user) => console.log(`Edited: ${user.username}`));
+     *   .then(console.log);
      *   .catch(console.error);
      */
     setUsername(username, password) {

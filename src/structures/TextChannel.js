@@ -12,19 +12,15 @@ const Message = require('./Message');
 class TextChannel extends GuildChannel {
     constructor(client, data) {
         super(client, data);
-        Object.defineProperty(this, 'client', { value: client });
+        Object.defineProperty(this, 'client', {
+            value: client
+        });
 
         /**
          * The topic of the text channel
-         * @type {?string}
+         * @type {string}
          */
         this.topic = data.topic;
-
-        /**
-         * Whether or not, the text channel is NSFW
-         * @type {boolean}
-         */
-        this.nsfw = Boolean(data.nsfw);
 
         /**
          * The ID of the message which was last sent in the text channel, if any
@@ -49,10 +45,8 @@ class TextChannel extends GuildChannel {
         if (typeof content === 'object' && !options) {
             options = content;
             content = null;
-        } else if (!options) {
-            options = {};
         }
-
+        if (!options) options = {};
         return this.client.rest.request('post', Endpoints.CHANNEL_MESSAGES(this.id), {
             auth: true,
             data: {

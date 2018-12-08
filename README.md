@@ -37,7 +37,13 @@ const Niscord = require('niscord');
 const client = new Niscord.Client();
 
 client.on('ready', () => {
-  console.log(`Logged in as ${client.user.username}.`);
+  console.log(`Logged in as ${client.user.tag}.`);
+});
+
+client.on('message', () => {
+  if (message.content === 'hello') {
+    return message.reply('Hello');
+  }
 });
 
 client.login('Client token');
@@ -47,5 +53,6 @@ client.login('Client token');
 * [Website](https://niscord.js.org)
 * [Documentation](https://niscord.js.org)
 * [Discord](https://discord.gg/hga9SeN)
-* [GitHub](https://github.com/niscord/niscord)
 * [NPM](https://npmjs.com/package/niscord)
+* [GitHub](https://github.com/niscord/niscord)
+* [YAJDBL](https://yajdbl.js.org)

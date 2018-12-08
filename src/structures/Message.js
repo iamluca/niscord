@@ -17,7 +17,9 @@ class Message {
             value: client
         });
 
-        Object.defineProperty(this, 'data', { value: data });
+        Object.defineProperty(this, 'data', {
+            value: data
+        });
 
         this.channel = this.client.channels.get(data.channel_id);
 

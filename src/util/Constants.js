@@ -153,10 +153,10 @@ exports.Events = {
     RAW: 'raw',
 };
 
-exports.ChannelTypes = {
-    TEXT: 0,
-    DM: 1,
-    VOICE: 2,
-    GROUP: 3,
-    CATEGORY: 4,
-};
+exports.ChannelTypes = [
+    'text',
+    'dm',
+    'groupdm',
+    'voice',
+    'category'
+];

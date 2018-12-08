@@ -22,7 +22,7 @@
     "jsdoc": "^3.5.5"
   },
   "dependencies": {
-    "node-fetch": "^2.3.0",
+    "axios": "^0.18.0",
     "ws": "^6.1.2"
   }
 }
