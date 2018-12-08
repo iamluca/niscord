@@ -59,7 +59,7 @@ class WebSocketManager extends EventEmitter {
                 break;
 
             case 'MESSAGE_CREATE':
-                if (this._state) return;
+                if (!this._state) return;
                 packet.d = new Message(this, packet.d);
                 if (!this.users.has(packet.d.author.id)) this.users.set(packet.d.user.id, new User(this.client, packet.d));
                 this.emit(Constants.Events.MESSAGE_CREATE, packet.d);
